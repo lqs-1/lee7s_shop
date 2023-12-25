@@ -1,5 +1,5 @@
 <template>
-    <div style="background-color: #f5f6fa;width: 100%; height: 100%;">
+    <div style=" background-color: #f5f6fa;width: 100%; height: 100%;">
         <el-container>
             <el-header style=" overflow: hidden;background-color: #fff;width: 95%;height: 10%;margin: 0 auto; margin-top: 15px; display: flex;border-radius:10px ;">
                 <el-menu @select="selectMenu"

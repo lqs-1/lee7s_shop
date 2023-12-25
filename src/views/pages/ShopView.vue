@@ -64,8 +64,17 @@
                         v-model="goodsForm.email"></el-input>
             </el-form-item>
 
-             <el-form-item label="支付方式" prop="moneyToken">
-              <el-input type="text" placeholder="口令红包" v-model="goodsForm.moneyToken"></el-input>
+             <el-form-item label="支付方式" prop="payMethod">
+<!--              <el-input type="text" >-->
+                <el-select v-model="goodsForm.payMethod" placeholder="请选择支付方式">
+                 <el-option
+                     v-for="item in payMethods"
+                     :key="item.value"
+                     :label="item.label"
+                     :value="item.value">
+                  </el-option>
+                </el-select>
+<!--              </el-input>-->
             </el-form-item>
 
           </el-form>
@@ -165,6 +174,10 @@ export default {
         return {
             isMobile: true,    //默认为pc端
             goodsForm: {},
+            payMethods: [{
+              value: '2',
+              label: '支付宝'
+            }],
             goodsVisible: false,
             rules: {
                 num: [{required: true, message: '数量必须填写', trigger: "blur"}],
@@ -180,7 +193,7 @@ export default {
                             id: 1,
                             goodsName: 'twitter成品',
                             stock: 23,
-                            price: 24,
+                            price: 1,
                             method: '自动发货'
                         },
                     ],
@@ -295,9 +308,21 @@ export default {
 
                     this.httpRequest.post("/back/order/pay", this.goodsForm)
                         .then((response) => {
-                            if (response.data.code >= 10000 && response.data.code < 20000) {
-                                this.$message.success("等待邮件")
-                            }
+                            // if (response.data.code >= 10000 && response.data.code < 20000) {
+                            //     this.$message.success("等待邮件")
+                            // }
+                          console.log(response)
+                          //跳转支付页面
+                          // document.location.href = response
+
+                          // document.querySelector("body").innerHTML = response.data;
+                          // document.forms[0].submit();
+
+                          // 假设后端返回的链接是存储在变量 responseLink 中
+                          let payLink = response.data
+
+                          // 使用 window.location.href 实现页面跳转
+                          window.location.href = payLink;
 
                         }).catch((error) => {
                         this.$message.error("未知错误")

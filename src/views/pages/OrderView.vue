@@ -76,6 +76,7 @@ export default {
     name: "OrderView",
     data() {
         return {
+          isMobile: true,
             searchKey: null,
             isResponse: false,
 
@@ -107,6 +108,11 @@ export default {
 
     created() {
         window.document.title = "订单查询"
+        let flag = navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i)
+        if (flag) {
+          //如果flag不为空，说明可以匹配到，是手机端
+          this.isMobile = false
+        }
     },
 
     methods: {
