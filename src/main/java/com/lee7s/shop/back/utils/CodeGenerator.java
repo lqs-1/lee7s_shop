@@ -27,7 +27,7 @@ public class CodeGenerator {
     public static void main(String[] args) {
 
 
-        FastAutoGenerator.create("jdbc:mysql://localhost:3306/lee7s_shop?serverTimezone=GMT%2B8&useSSL=false&useLegacyDatetimeCode=false&allowPublicKeyRetrieval=true", "root", "123456")
+        FastAutoGenerator.create("jdbc:mysql://localhost:3306/account_shop?serverTimezone=GMT%2B8&useSSL=false&useLegacyDatetimeCode=false&allowPublicKeyRetrieval=true", "root", "123456")
                 // 全局配置
                 .globalConfig((scanner, builder) -> builder.author(scanner.apply("=====================全局配置=======================\n请输入作者名称？"))
                         .outputDir(System.getProperty("user.dir") + "/src/main/java")

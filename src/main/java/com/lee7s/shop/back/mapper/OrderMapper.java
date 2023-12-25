@@ -1,7 +1,7 @@
 package com.lee7s.shop.back.mapper;
 
-import com.lee7s.shop.back.entity.Order;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.lee7s.shop.back.entity.Order;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
@@ -10,7 +10,7 @@ import org.apache.ibatis.annotations.Mapper;
  * </p>
  *
  * @author lee7s
- * @since 2023-10-07 10:33:14
+ * @since 2023-12-24 10:26:13
  */
 @Mapper
 public interface OrderMapper extends BaseMapper<Order> {

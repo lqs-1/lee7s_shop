@@ -1,7 +1,11 @@
 package com.lee7s.shop.back.service;
 
-import com.lee7s.shop.back.entity.Goods;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.lee7s.shop.back.entity.Goods;
+import com.lee7s.shop.back.utils.Pagination.PageUtils;
+import com.lee7s.shop.back.utils.R;
+
+import java.util.Map;
 
 /**
  * <p>
@@ -9,8 +13,15 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * </p>
  *
  * @author lee7s
- * @since 2023-10-07 10:33:14
+ * @since 2023-12-24 10:26:13
  */
 public interface GoodsService extends IService<Goods> {
 
+    PageUtils requestGoodsPageList(Map<String, Object> param);
+
+    R appendGoods(Goods goods);
+
+    R alterGoods(Goods goods);
+
+    void removeGoods(Integer id);
 }

@@ -22,7 +22,7 @@ public class GoodsPayVo {
 
     private Integer total; // 商品总价
 
-    private String moneyToken; // 口令红包
+    private String payMethod; // 支付方式 1微信 2支付宝
 
 
 }

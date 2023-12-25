@@ -1,9 +1,10 @@
 package com.lee7s.shop.back.service;
 
-import com.lee7s.shop.back.entity.Order;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.lee7s.shop.back.entity.Order;
 import com.lee7s.shop.back.vo.GoodsPayVo;
 import com.lee7s.shop.back.vo.PayVo;
+import com.lee7s.shop.back.vo.VPayVo;
 
 /**
  * <p>
@@ -15,5 +16,8 @@ import com.lee7s.shop.back.vo.PayVo;
  */
 public interface OrderService extends IService<Order> {
 
-    String constructOrderPayData(GoodsPayVo goodsPayVo);
+
+    PayVo constructOrderPayDataAliPay(GoodsPayVo goodsPayVo);
+
+    VPayVo constructOrderPayDataVPay(GoodsPayVo goodsPayVo);
 }
