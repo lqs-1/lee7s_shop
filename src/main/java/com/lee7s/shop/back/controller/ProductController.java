@@ -2,13 +2,14 @@ package com.lee7s.shop.back.controller;
 
 import com.lee7s.shop.back.constant.REnum;
 import com.lee7s.shop.back.entity.Product;
-import com.lee7s.shop.back.entity.ProductCategory;
 import com.lee7s.shop.back.service.ProductService;
 import com.lee7s.shop.back.utils.Pagination.PageUtils;
 import com.lee7s.shop.back.utils.R;
+import com.lee7s.shop.back.vo.ProductIdAndNameVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -148,6 +149,29 @@ public class ProductController {
         }
     }
 
+
+    /**
+     * 根据产品分类id获取可用产品id和名字
+     * @return
+     */
+    @GetMapping("requestProductIdAndNameListByCategoryId/{productCategoryId}")
+    public R requestProductIdAndNameListByCategoryId(@PathVariable Integer productCategoryId){
+        try{
+
+            List<ProductIdAndNameVo> productIdAndNameList = productService.requestProductIdAndNameListByCategoryId(productCategoryId);
+
+            return R.ok(REnum.REQUEST_PRODUCT_ID_AND_NAME_SUCCESS.getStatusCode(),
+                            REnum.REQUEST_PRODUCT_ID_AND_NAME_SUCCESS.getStatusMsg())
+                    .put("productIdAndNameList", productIdAndNameList);
+
+        }catch (Exception e){
+
+            e.printStackTrace();
+
+            return R.error(REnum.REQUEST_PRODUCT_ID_AND_NAME_FAIL.getStatusCode(),
+                    REnum.REQUEST_PRODUCT_ID_AND_NAME_FAIL.getStatusMsg());
+        }
+    }
 
 
 }

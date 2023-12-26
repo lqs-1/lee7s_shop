@@ -79,6 +79,7 @@ public class Product {
     @TableField("product_lock_stock")
     private Integer productLockStock;
 
+    // 所属产品分类
     @TableField(exist = false)
     private String productCategoryName;
 

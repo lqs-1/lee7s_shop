@@ -8,19 +8,19 @@ import lombok.Data;
  * @do 前端收集的用户商品订单数据
  */
 @Data
-public class GoodsPayVo {
+public class OrderPayVo {
 
-    private Integer id; // 商品id
+    private Integer productId; // 产品id
 
-    private String goodsName; // 商品名字
+    private String productName; // 产品名字
 
     private String email; // 客户邮箱
 
-    private Integer num; // 商品数量
+    private Integer goodsNum; // 产品数量
 
-    private Integer price; // 商品单价
+    private Integer goodsPrice; // 产品单价
 
-    private Integer total; // 商品总价
+    private Integer orderTotalPrice; // 订单总额
 
     private String payMethod; // 支付方式 1微信 2支付宝
 

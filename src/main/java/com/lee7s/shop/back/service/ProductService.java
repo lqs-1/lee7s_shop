@@ -2,10 +2,11 @@ package com.lee7s.shop.back.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.lee7s.shop.back.entity.Product;
-import com.lee7s.shop.back.entity.ProductCategory;
 import com.lee7s.shop.back.utils.Pagination.PageUtils;
 import com.lee7s.shop.back.utils.R;
+import com.lee7s.shop.back.vo.ProductIdAndNameVo;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -27,4 +28,14 @@ public interface ProductService extends IService<Product> {
     void removeProduct(Integer id);
 
     R alterProductStatus(Product product);
+
+    List<ProductIdAndNameVo> requestProductIdAndNameListByCategoryId(Integer productCategoryId);
+
+    Product requestProductNameByProductId(Integer productId);
+
+    void updateStock(Integer productId, Integer stockNum);
+
+    List<Product> requestAvailableProductList(Integer productCategoryId);
+
+    void localProductStock(Integer productId, Integer num);
 }

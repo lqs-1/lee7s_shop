@@ -2,6 +2,7 @@ package com.lee7s.shop.back.controller;
 
 import com.lee7s.shop.back.constant.REnum;
 import com.lee7s.shop.back.entity.Goods;
+import com.lee7s.shop.back.entity.ProductCategory;
 import com.lee7s.shop.back.service.GoodsService;
 import com.lee7s.shop.back.utils.Pagination.PageUtils;
 import com.lee7s.shop.back.utils.R;
@@ -118,9 +119,31 @@ public class GoodsController {
 
             return R.error(REnum.GOODS_REMOVE_FAIL.getStatusCode(),
                     REnum.GOODS_REMOVE_FAIL.getStatusMsg());
-
-
         }
     }
+
+
+    /**
+     * 修改商品上架状态
+     * @param goods
+     * @return
+     */
+    @PutMapping("alterGoodsStatus")
+    public R alterGoodsStatus(@RequestBody Goods goods){
+        try{
+
+            R result = goodsService.alterGoodsStatus(goods);
+
+            return result;
+
+        }catch (Exception e){
+
+            e.printStackTrace();
+
+            return R.error(REnum.GOODS_STATUS_ALTER_FAIL.getStatusCode(),
+                    REnum.GOODS_STATUS_ALTER_FAIL.getStatusMsg());
+        }
+    }
+
 
 }

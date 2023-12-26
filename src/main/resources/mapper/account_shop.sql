@@ -11,7 +11,7 @@
  Target Server Version : 80200 (8.2.0)
  File Encoding         : 65001
 
- Date: 25/12/2023 23:41:49
+ Date: 26/12/2023 23:31:39
 */
 
 SET NAMES utf8mb4;
@@ -24,7 +24,7 @@ DROP TABLE IF EXISTS `goods`;
 CREATE TABLE `goods`  (
   `goods_id` int NOT NULL AUTO_INCREMENT COMMENT '具体商品的id',
   `product_id` int NOT NULL COMMENT '所属产品id',
-  `goods_detail` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '具体商品的详情 因为是账号所以这里就是账号信息',
+  `goods_detail` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '具体商品的详情 因为是账号所以这里就是账号信息',
   `create_time` datetime NOT NULL COMMENT '创建时间',
   `update_time` datetime NOT NULL COMMENT '更新时间',
   `is_delete` int NOT NULL COMMENT '商品是否删除 0 未删除 1 已删除',
@@ -33,11 +33,15 @@ CREATE TABLE `goods`  (
   PRIMARY KEY (`goods_id`) USING BTREE,
   INDEX `prods`(`product_id` ASC) USING BTREE,
   CONSTRAINT `prods` FOREIGN KEY (`product_id`) REFERENCES `product` (`product_id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 55 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of goods
 -- ----------------------------
+INSERT INTO `goods` VALUES (51, 8, '+1234234234234   https://wejfwiofjwiefjweoi.com/werfjiowej', '2023-12-26 14:56:25', '2023-12-26 23:28:36', 0, 1, 2);
+INSERT INTO `goods` VALUES (52, 8, '+213213124233432v https:///wfwefwef', '2023-12-26 14:57:50', '2023-12-26 23:28:36', 0, 1, 2);
+INSERT INTO `goods` VALUES (53, 8, '为人父个体户脚后跟范德萨', '2023-12-26 16:29:44', '2023-12-26 23:20:39', 0, 0, 0);
+INSERT INTO `goods` VALUES (54, 9, '微软给海关法的实施', '2023-12-26 17:06:23', '2023-12-26 19:15:04', 0, 0, 0);
 
 -- ----------------------------
 -- Table structure for order
@@ -46,11 +50,11 @@ DROP TABLE IF EXISTS `order`;
 CREATE TABLE `order`  (
   `order_sn` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '订单编号',
   `product_id` int NOT NULL COMMENT '购买产品的id',
-  `product_name` varchar(0) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '购买产品的名字',
+  `product_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '购买产品的名字',
   `goods_price` int NOT NULL COMMENT '商品单价',
   `order_total_price` int NOT NULL COMMENT '订单总价',
   `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '客户邮箱',
-  `goods_detail_ids` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '具体商品的id 可多个 用于解库存',
+  `goods_detail_ids` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '具体商品的id 可多个 用于解库存 : 分割',
   `order_status` int NOT NULL COMMENT '订单状态 0 库存已经锁定 1 已完成 2 已取消',
   `create_time` datetime NOT NULL COMMENT '创建时间',
   `update_time` datetime NOT NULL COMMENT '更新时间',
@@ -61,6 +65,8 @@ CREATE TABLE `order`  (
 -- ----------------------------
 -- Records of order
 -- ----------------------------
+INSERT INTO `order` VALUES ('6a92171d960bddd6075abd9532bc5b73', 8, 'Telegram美国成品号', 1, 2, '749062870@qq.com', '51:52', 0, '2023-12-26 23:24:12', '2023-12-26 23:24:12', 2);
+INSERT INTO `order` VALUES ('ff4d1d07588d072f6e6d1067f2885750', 8, 'Telegram美国成品号', 1, 2, '749062870@qq.com', '51:52', 0, '2023-12-26 23:28:36', '2023-12-26 23:28:36', 2);
 
 -- ----------------------------
 -- Table structure for product
@@ -84,13 +90,13 @@ CREATE TABLE `product`  (
   PRIMARY KEY (`product_id`) USING BTREE,
   INDEX `category_id`(`product_category_id` ASC) USING BTREE,
   CONSTRAINT `category_id` FOREIGN KEY (`product_category_id`) REFERENCES `product_category` (`product_category_id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 10 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of product
 -- ----------------------------
-INSERT INTO `product` VALUES (1, 6, '飞机共享号飞机好东西', 12, 'public/2023-12-25/01955e0d7cd24613b9f376b83b4e2b41.png', '2023-12-25 22:09:13', '2023-12-25 23:28:43', 1, '21', '12', 0, 0, 1, 1);
-INSERT INTO `product` VALUES (2, 8, '小火箭共享账号', 16, 'public/2023-12-25/baf7978adf804d73937641b8df2b41be.png', '2023-12-25 22:43:25', '2023-12-25 23:31:56', 0, '没有', '没有:没有没有:没有没有:没有', 0, 0, 1, 0);
+INSERT INTO `product` VALUES (8, 28, 'Telegram美国成品号', 1, 'public/2023-12-26/10fee6b2c19e47fe88af573494055f4d.png', '2023-12-26 14:42:40', '2023-12-26 23:28:36', 0, '需要自己使用:注意区分大小写:验证码只能收一次', '切勿违规使用', 3, 2, 0, 0);
+INSERT INTO `product` VALUES (9, 28, 'Telegram协议号', 20, 'public/2023-12-26/0e19b8e8d762423d93c189976d7e3f04.png', '2023-12-26 14:43:31', '2023-12-26 19:41:01', 0, '本店在技术范围内会尽力保障商品的可用性，所有商品如无单独标注，售后期为商品发货24小时内；批发售后期为商品发货5天内:建议只在app store里面登录账号，请勿在【设置】里登录账号', '每天数量有限，找TG客服预定，优先发货！', 1, 0, 1, 0);
 
 -- ----------------------------
 -- Table structure for product_category
@@ -105,22 +111,14 @@ CREATE TABLE `product_category`  (
   `is_delete` int NOT NULL COMMENT '产品分类是否删除 0 未删除 1 已删除',
   `status` int NOT NULL COMMENT '上架状态 0 上架 1 下架',
   PRIMARY KEY (`product_category_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 18 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 32 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of product_category
 -- ----------------------------
-INSERT INTO `product_category` VALUES (6, '飞机账号', 'public/2023-12-25/5105a96c1b824444b4553b37eced8830.png', '2023-12-25 19:14:30', '2023-12-25 22:45:59', 0, 0);
-INSERT INTO `product_category` VALUES (7, '推特账号', 'public/2023-12-25/55819baa087d433f9dfbbe6f5beba1ec.png', '2023-12-25 19:20:08', '2023-12-25 22:45:58', 0, 0);
-INSERT INTO `product_category` VALUES (8, '苹果id', 'public/2023-12-25/e0073b89abdc4d7ea40fbf4dcf216601.png', '2023-12-25 19:31:08', '2023-12-25 19:54:18', 0, 0);
-INSERT INTO `product_category` VALUES (9, '12', 'public/2023-12-25/93d402ea7fcd4b7eb5cc0084b7629c76.png', '2023-12-25 20:19:21', '2023-12-25 20:19:21', 1, 1);
-INSERT INTO `product_category` VALUES (10, '21', 'public/2023-12-25/3b1181c47b5f418cbf35e1446e3e35ef.png', '2023-12-25 20:20:43', '2023-12-25 20:20:43', 1, 0);
-INSERT INTO `product_category` VALUES (11, '34', 'public/2023-12-25/a23279aa8c724f4ca9f62d00614fa7bb.png', '2023-12-25 20:21:56', '2023-12-25 20:21:56', 1, 1);
-INSERT INTO `product_category` VALUES (12, 'nihao', 'public/2023-12-25/0ad64550490346368ff2d3ad668e416d.png', '2023-12-25 20:24:08', '2023-12-25 20:24:08', 1, 1);
-INSERT INTO `product_category` VALUES (13, '45654', 'public/2023-12-25/c616275fc392453188c51ec82977ef97.png', '2023-12-25 20:24:37', '2023-12-25 20:24:37', 1, 1);
-INSERT INTO `product_category` VALUES (14, '123121231', 'public/2023-12-25/18e3600aae07498890c7aff6d7c7acad.png', '2023-12-25 20:27:11', '2023-12-25 20:27:11', 1, 1);
-INSERT INTO `product_category` VALUES (15, '你好吗', 'public/2023-12-25/d1c0db352e854ba8a1cefb970ecce315.png', '2023-12-25 20:27:23', '2023-12-25 21:04:02', 1, 0);
-INSERT INTO `product_category` VALUES (16, 'wer', 'public/2023-12-25/5a0a87c22e374034a613c960a8166709.png', '2023-12-25 20:39:28', '2023-12-25 21:04:08', 1, 0);
-INSERT INTO `product_category` VALUES (17, 'fweqef', 'public/2023-12-25/9d3c96e1602447068b75317490bb4759.png', '2023-12-25 22:07:19', '2023-12-25 22:45:55', 1, 0);
+INSERT INTO `product_category` VALUES (28, 'Telegram账号', 'public/2023-12-26/9415bbb0610c478f8c997c1714110b7b.png', '2023-12-26 14:40:31', '2023-12-26 16:09:37', 0, 0);
+INSERT INTO `product_category` VALUES (29, 'Twitter账号', 'public/2023-12-26/e25bf9855f0541578af25be649c442a8.png', '2023-12-26 14:40:56', '2023-12-26 16:10:07', 0, 0);
+INSERT INTO `product_category` VALUES (30, 'AppliId', 'public/2023-12-26/a58d2ef193bd4cd3ac9662979ce7868a.png', '2023-12-26 14:41:08', '2023-12-26 16:10:39', 0, 0);
+INSERT INTO `product_category` VALUES (31, 'TIktok账号', 'public/2023-12-26/cc64af97181346a5b4bfb9493dbee1fa.png', '2023-12-26 14:41:23', '2023-12-26 18:05:17', 0, 0);
 
 SET FOREIGN_KEY_CHECKS = 1;

@@ -32,4 +32,6 @@ public interface ProductCategoryService extends IService<ProductCategory> {
     List<ProductCategoryIdAndNameVo> requestProductCategoryIdAndNameList();
 
     String requestProductCategoryNameById(Integer productCategoryId);
+
+    List<ProductCategory> requestAvailableProductCategoryList();
 }

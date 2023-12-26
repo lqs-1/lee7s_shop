@@ -76,6 +76,16 @@ public enum REnum {
     REQUEST_PRODUCT_CATEGORY_ID_AND_NAME_SUCCESS(11037, "获取可用产品分类信息成功"),
     REQUEST_PRODUCT_CATEGORY_ID_AND_NAME_FAIL(21037, "获取可用产品分类信息失败"),
 
+    REQUEST_PRODUCT_ID_AND_NAME_SUCCESS(11039, "获取可用产品信息成功"),
+    REQUEST_PRODUCT_ID_AND_NAME_FAIL(21039, "获取可用产品信息失败"),
+
+    GOODS_STATUS_ALTER_SUCCESS(11040, "商品上架状态切换成功"),
+    GOODS_STATUS_ALTER_FAIL(21040, "商品上架状态切换失败"),
+
+    GET_ORDER_PAGE_LIST_SUCCESS(11041, "获取订单列表成功"),
+    GET_ORDER_PAGE_LIST_FAIL(21041, "获取订单列表失败"),
+
+
 
 
 

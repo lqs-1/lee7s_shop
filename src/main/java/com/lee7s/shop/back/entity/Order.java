@@ -21,13 +21,13 @@ import java.time.LocalDateTime;
  */
 @Getter
 @Setter
-@TableName("order")
+@TableName("`order`")
 @ApiModel(value = "Order对象", description = "")
 public class Order {
 
     @ApiModelProperty("订单编号")
       @TableId("order_sn")
-    private Integer orderSn;
+    private String orderSn;
 
     @ApiModelProperty("购买产品的id")
     @TableField("product_id")
@@ -49,7 +49,7 @@ public class Order {
     @TableField("email")
     private String email;
 
-    @ApiModelProperty("具体商品的id 可多个 用于解库存")
+    @ApiModelProperty("具体商品的id 可多个 用于解库存 : 分割")
     @TableField("goods_detail_ids")
     private String goodsDetailIds;
 
@@ -62,7 +62,7 @@ public class Order {
     private LocalDateTime createTime;
 
     @ApiModelProperty("更新时间")
-    @TableField("update_time")
+    @TableField(value = "update_time", fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime updateTime;
 
     @ApiModelProperty("商品数量")

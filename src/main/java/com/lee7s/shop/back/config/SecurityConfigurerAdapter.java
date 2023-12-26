@@ -41,7 +41,7 @@ public class SecurityConfigurerAdapter extends WebSecurityConfigurerAdapter {
 
     // 通过构造器注入以上三个参数
     @Autowired
-    public SecurityConfigurerAdapter(JwtToken jwtToken, UserDetailsService userDetailsService, UserService userService){
+    public SecurityConfigurerAdapter(JwtToken jwtToken, UserDetailsService userDetailsService, UserService userService) {
         this.userDetailsService = userDetailsService;
         this.jwtToken = jwtToken;
         this.userService = userService;
@@ -50,6 +50,7 @@ public class SecurityConfigurerAdapter extends WebSecurityConfigurerAdapter {
 
     /**
      * 认证这一块的配置
+     *
      * @param http
      * @throws Exception
      */
@@ -63,15 +64,17 @@ public class SecurityConfigurerAdapter extends WebSecurityConfigurerAdapter {
         //解决跨域问题。cors 预检请求放行,让Spring security 放行所有preflight request（cors 预检请求）
         http.authorizeRequests().requestMatchers(CorsUtils::isPreFlightRequest).permitAll();
 
-     //    /swagger-ui.html
-    //             /webjars/**
-    //      /v2/**
-     //     /swagger-resources/**
+        //    /swagger-ui.html
+        //             /webjars/**
+        //      /v2/**
+        //     /swagger-resources/**
 
         http.authorizeRequests()
                 // 放行一些功能接口 这个可以是任何请求方式
                 .antMatchers(
                         "/user/captcha",
+                        "/shop/**",
+                        "/back/order/pay",
                         "/",
                         "/favicon.ico",
                         "/static/**",
@@ -112,6 +115,7 @@ public class SecurityConfigurerAdapter extends WebSecurityConfigurerAdapter {
 
     /**
      * 添加获取数据库用户数据的配置
+     *
      * @param auth
      * @throws Exception
      */
@@ -126,10 +130,11 @@ public class SecurityConfigurerAdapter extends WebSecurityConfigurerAdapter {
 
     /**
      * 给容器中配置一个加密器
+     *
      * @return
      */
     @Bean
-    public BCryptPasswordEncoder passwordEncoder(){
+    public BCryptPasswordEncoder passwordEncoder() {
 
         return new BCryptPasswordEncoder();
 

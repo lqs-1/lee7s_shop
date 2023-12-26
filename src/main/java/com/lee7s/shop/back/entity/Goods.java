@@ -39,7 +39,7 @@ public class Goods {
     private LocalDateTime createTime;
 
     @ApiModelProperty("更新时间")
-    @TableField("update_time")
+    @TableField(value = "update_time", fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime updateTime;
 
     @ApiModelProperty("商品是否删除 0 未删除 1 已删除")
@@ -55,5 +55,12 @@ public class Goods {
     @TableField("goods_status")
     private Integer goodsStatus;
 
+    // 所属产品
+    @TableField(exist = false)
+    private String productName;
+
+    // 所属产品分类id
+    @TableField(exist = false)
+    private Integer productCategoryId;
 
 }

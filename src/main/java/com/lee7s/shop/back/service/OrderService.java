@@ -2,9 +2,12 @@ package com.lee7s.shop.back.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.lee7s.shop.back.entity.Order;
-import com.lee7s.shop.back.vo.GoodsPayVo;
+import com.lee7s.shop.back.utils.Pagination.PageUtils;
+import com.lee7s.shop.back.vo.OrderPayVo;
 import com.lee7s.shop.back.vo.PayVo;
 import com.lee7s.shop.back.vo.VPayVo;
+
+import java.util.Map;
 
 /**
  * <p>
@@ -16,8 +19,11 @@ import com.lee7s.shop.back.vo.VPayVo;
  */
 public interface OrderService extends IService<Order> {
 
+    PayVo constructOrderPayDataAliPay(OrderPayVo orderPayVo);
 
-    PayVo constructOrderPayDataAliPay(GoodsPayVo goodsPayVo);
+    VPayVo constructOrderPayDataVPay(OrderPayVo orderPayVo);
 
-    VPayVo constructOrderPayDataVPay(GoodsPayVo goodsPayVo);
+    PageUtils requestOrderPageList(Map<String, Object> param);
+
+    void orderAutoCancel(Order order);
 }

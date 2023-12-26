@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lee7s.shop.back.cloud.storage.abs.auto.UploadPlusProperties;
 import com.lee7s.shop.back.cloud.storage.abs.upload.FileUploadPlus;
+import com.lee7s.shop.back.constant.Constant;
 import com.lee7s.shop.back.constant.REnum;
 import com.lee7s.shop.back.entity.Product;
 import com.lee7s.shop.back.mapper.ProductMapper;
@@ -13,10 +14,11 @@ import com.lee7s.shop.back.service.ProductService;
 import com.lee7s.shop.back.utils.Pagination.PageUtils;
 import com.lee7s.shop.back.utils.Pagination.QueryPage;
 import com.lee7s.shop.back.utils.R;
-import org.springframework.beans.BeanUtils;
+import com.lee7s.shop.back.vo.ProductIdAndNameVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -50,9 +52,12 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
     @Override
     public PageUtils requestProductPageList(Map<String, Object> param) {
 
-        IPage<Product> page = this.page(new QueryPage<Product>().getPage(param, true),
-                new LambdaQueryWrapper<Product>().like(Product::getProductName,
-                        (String) param.get("productName")));
+        LambdaQueryWrapper<Product> queryWrapper = new LambdaQueryWrapper<Product>().like(Product::getProductName, (String) param.get("productName"));
+        if (!ObjectUtils.isEmpty(param.get("productCategoryId"))){
+            queryWrapper.eq(Product::getProductCategoryId, Integer.parseInt((String) param.get("productCategoryId")));
+        }
+
+        IPage<Product> page = this.page(new QueryPage<Product>().getPage(param, true), queryWrapper);
 
 
 
@@ -131,7 +136,6 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
      * @return
      */
     @Transactional(readOnly = false, rollbackFor = Exception.class)
-
     @Override
     public R alterProductStatus(Product product) {
 
@@ -140,5 +144,76 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
         return R.ok(REnum.PRODUCT_STATUS_ALTER_SUCCESS.getStatusCode(),
                 REnum.PRODUCT_STATUS_ALTER_SUCCESS.getStatusMsg());
 
+    }
+
+    /**
+     * 根据产品分类id获取可用产品id和名字
+     * @return
+     */
+    @Override
+    public List<ProductIdAndNameVo> requestProductIdAndNameListByCategoryId(Integer productCategoryId) {
+        List<Product> productList = this.baseMapper.selectList(new LambdaQueryWrapper<Product>().eq(Product::getStatus, Constant.ProductStatus.ON.getStatusCode()).eq(Product::getProductCategoryId, productCategoryId));
+
+        List<ProductIdAndNameVo> productIdAndNameVos = productList.stream().map(product -> {
+            ProductIdAndNameVo productIdAndNameVo = new ProductIdAndNameVo();
+            productIdAndNameVo.setProductId(product.getProductId());
+            productIdAndNameVo.setProductName(product.getProductName());
+
+            return productIdAndNameVo;
+        }).collect(Collectors.toList());
+
+        return productIdAndNameVos;
+    }
+
+
+    /**
+     * 根据产品id查询产品名称和产品所属分类id
+     * 也就是返回对象 根据产品id查询对应的产品对象
+     * @param productId
+     * @return
+     */
+    @Override
+    public Product requestProductNameByProductId(Integer productId) {
+
+        return this.baseMapper.selectById(productId);
+
+    }
+
+    /**
+     * 更改商品状态以后 根据产品id更新产品库存
+     * @param productId
+     */
+    @Transactional(readOnly = false, rollbackFor = Exception.class)
+    @Override
+    public void updateStock(Integer productId, Integer stockNum) {
+        Product product = this.baseMapper.selectById(productId);
+        product.setProductStock(product.getProductStock() + stockNum);
+        this.baseMapper.updateById(product);
+    }
+
+    /**
+     * 根据产品分类id查询可用的产品列表
+     * @param productCategoryId
+     * @return
+     */
+    @Override
+    public List<Product> requestAvailableProductList(Integer productCategoryId) {
+
+        return this.baseMapper.selectList(new LambdaQueryWrapper<Product>().eq(Product::getStatus, Constant.ProductStatus.ON.getStatusCode()).eq(Product::getProductCategoryId, productCategoryId));
+
+    }
+
+    /**
+     * 修改产品锁定库存
+     *
+     * @param productId
+     * @param num
+     */
+    @Transactional(readOnly = false, rollbackFor = Exception.class)
+    @Override
+    public void localProductStock(Integer productId, Integer num) {
+        Product product = this.baseMapper.selectById(productId);
+        product.setProductLockStock(product.getProductLockStock() + num);
+        this.baseMapper.updateById(product);
     }
 }

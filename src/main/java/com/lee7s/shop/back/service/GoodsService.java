@@ -5,6 +5,7 @@ import com.lee7s.shop.back.entity.Goods;
 import com.lee7s.shop.back.utils.Pagination.PageUtils;
 import com.lee7s.shop.back.utils.R;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -24,4 +25,8 @@ public interface GoodsService extends IService<Goods> {
     R alterGoods(Goods goods);
 
     void removeGoods(Integer id);
+
+    R alterGoodsStatus(Goods goods);
+
+    List<Integer> lockGoodsByProductId(Integer productId, Integer goodsNum);
 }

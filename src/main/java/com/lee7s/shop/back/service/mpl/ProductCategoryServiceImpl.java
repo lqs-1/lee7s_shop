@@ -166,4 +166,15 @@ public class ProductCategoryServiceImpl extends ServiceImpl<ProductCategoryMappe
         return productCategory.getProductCategoryName();
 
     }
+
+    /**
+     * 查询可用的产品分类列表
+     * @return
+     */
+    @Override
+    public List<ProductCategory> requestAvailableProductCategoryList() {
+
+        return this.baseMapper.selectList(new LambdaQueryWrapper<ProductCategory>().eq(ProductCategory::getStatus, Constant.ProductCategoryStatus.ON.getStatusCode()));
+
+    }
 }

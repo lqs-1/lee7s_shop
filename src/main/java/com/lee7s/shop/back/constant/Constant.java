@@ -15,9 +15,9 @@ public class Constant {
     // R对象中使用的常量
     public static final String RESPONSE_MSG_KEY = "msg";
     // 根字典
-    public static final String  DICT_TYPE_PARENT = "0";
+    public static final String DICT_TYPE_PARENT = "0";
     // 子字典
-    public static final String  DICT_TYPE_SON = "1";
+    public static final String DICT_TYPE_SON = "1";
 
 
     // 单张网络图片生成目录
@@ -43,22 +43,53 @@ public class Constant {
     public static final String ACCESS_CONTROL_EXPOSE_HEADERS = "Access-Control-Expose-Headers";
 
 
-
-
     // v免签通讯密钥
     public static final String VKey = "2141d908d0ddf4f155107bc14fa37001";
 
+    // v免签地址
+    public static final String VPayHOST = "https://shop.nobibibi.top/";
 
-    public enum OrderStatus{
-        CREATE(0, "未支付"),
-        FINISH(1, "已完成"),
-        CANCEL(2, "已取消");
+    // v免签创建订单接口
+    public static final String VPayINTERFACE = "createOrder";
+
+    // v免签支付页面
+    public static final String VPayPAGE = "https://shop.nobibibi.top/payPage/pay.html?orderId=";
+
+    // 支付通知地址notifyUrl
+    public static final String NOTIFY_URL = "http://nobibibi.top/back/order/notify";
+
+    // 支付通知地址returnUrl
+    public static final String RETURN_URL = "http://localhost:9090";
+
+
+
+    // 延时队列-订单交换机
+    public static final String ORDER_CANCEL_EXCHANGE = "order-cancel-exchange";
+    // 延时队列-订单取消延时队列
+    public static final String ORDER_CANCEL_TIME_DELAY_QUEUE = "order-cancel-time-delay-queue";
+    // 延时队列-订单取消延时队列routeKey
+    public static final String ORDER_CANCEL_TIME_DELAY_QUEUE_ROUTE_KEY = "order-cancel-time-delay-queue-key";
+    // 延时队列-订单取消执行队列
+    public static final String ORDER_CANCEL_INVOKE_QUEUE = "order-cancel-invoke-queue";
+    // 延时队列-订单取消执行routeKey
+    public static final String ORDER_CANCEL_INVOKE_QUEUE_ROUTE_KEY = "order-cancel-invoke-queue-key";
+    // 延时时间 这个时间用于自动取消订单
+    public static final Integer ORDER_CANCEL_TIME_DELAY_QUEUE_TTL = 60000;
+
+
+
+    /**
+     * 产品分类上架状态
+     */
+    public enum ProductCategoryStatus {
+        ON(0, "已上架"),
+        OFF(1, "已下架");
 
         private Integer statusCode;
 
         private String statusMsg;
 
-        OrderStatus(Integer statusCode, String statusMsg){
+        ProductCategoryStatus(Integer statusCode, String statusMsg) {
             this.statusCode = statusCode;
             this.statusMsg = statusMsg;
         }
@@ -72,15 +103,93 @@ public class Constant {
         }
     }
 
-    public enum GoodsStatus{
-        AVAILABLE(0, "可用"),
-        SOLD(1, "已售");
+    /**
+     * 产品上架状态
+     */
+    public enum ProductStatus {
+        ON(0, "已上架"),
+        OFF(1, "已下架");
 
         private Integer statusCode;
 
         private String statusMsg;
 
-        GoodsStatus(Integer statusCode, String statusMsg){
+        ProductStatus(Integer statusCode, String statusMsg) {
+            this.statusCode = statusCode;
+            this.statusMsg = statusMsg;
+        }
+
+        public Integer getStatusCode() {
+            return statusCode;
+        }
+
+        public String getStatusMsg() {
+            return statusMsg;
+        }
+    }
+
+    /**
+     * 商品上架状态
+     */
+    public enum GoodsStatus {
+        ON(0, "已上架"),
+        OFF(1, "已下架");
+
+        private Integer statusCode;
+
+        private String statusMsg;
+
+        GoodsStatus(Integer statusCode, String statusMsg) {
+            this.statusCode = statusCode;
+            this.statusMsg = statusMsg;
+        }
+
+        public Integer getStatusCode() {
+            return statusCode;
+        }
+
+        public String getStatusMsg() {
+            return statusMsg;
+        }
+    }
+
+    /**
+     * 商品状态
+     */
+    public enum GoodsGoodsStatus {
+        ON(0, "可用"),
+        OFF(1, "已售"),
+        LOCK(2, "锁定");
+        private Integer statusCode;
+
+        private String statusMsg;
+
+        GoodsGoodsStatus(Integer statusCode, String statusMsg) {
+            this.statusCode = statusCode;
+            this.statusMsg = statusMsg;
+        }
+
+        public Integer getStatusCode() {
+            return statusCode;
+        }
+
+        public String getStatusMsg() {
+            return statusMsg;
+        }
+    }
+
+    /**
+     * 订单状态
+     */
+    public enum OrderStatus {
+        LOCK(0, "库存锁定,订单已创建,等待支付"),
+        FINISH(1, "已完成"),
+        CANCEL(2, "已取消");
+        private Integer statusCode;
+
+        private String statusMsg;
+
+        OrderStatus(Integer statusCode, String statusMsg) {
             this.statusCode = statusCode;
             this.statusMsg = statusMsg;
         }
@@ -96,17 +205,16 @@ public class Constant {
 
 
     /**
-     * 产品分类上架状态
+     * 发货方式
      */
-    public enum ProductCategoryStatus{
-        ON(0, "已上架"),
-        OFF(1, "已下架");
-
+    public enum ProductMethod {
+        AUTO(0, "自动发货"),
+        MANUAL(1, "手动发货");
         private Integer statusCode;
 
         private String statusMsg;
 
-        ProductCategoryStatus(Integer statusCode, String statusMsg){
+        ProductMethod(Integer statusCode, String statusMsg) {
             this.statusCode = statusCode;
             this.statusMsg = statusMsg;
         }
@@ -120,5 +228,29 @@ public class Constant {
         }
     }
 
+
+    /**
+     * 支付方式
+     */
+    public enum PayMethod {
+        TENCENT_PAY(1, "微信支付"),
+        ALIPAY(2, "支付宝支付");
+        private Integer statusCode;
+
+        private String statusMsg;
+
+        PayMethod(Integer statusCode, String statusMsg) {
+            this.statusCode = statusCode;
+            this.statusMsg = statusMsg;
+        }
+
+        public Integer getStatusCode() {
+            return statusCode;
+        }
+
+        public String getStatusMsg() {
+            return statusMsg;
+        }
+    }
 
 }
