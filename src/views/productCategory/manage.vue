@@ -29,16 +29,6 @@
                  <el-button size="small" type="primary">点击上传</el-button>
               </el-upload>
             </el-form-item>
-
-            <el-form-item label="上架状态" prop="status">
-              <el-switch
-                  v-model="productCategoryForm.status"
-                  :active-value="0"
-                  :inactive-value="1"
-                  active-color="#13ce66"
-                  inactive-color="#ff4949">
-              </el-switch>
-            </el-form-item>
             
           </el-form>
       </span>
@@ -86,8 +76,7 @@
     </el-dialog>
 
 
-    <el-button type="success" class="queryButton" @click="queryByName">分类查询</el-button>
-    <el-input v-model="productCategoryName" placeholder="请输入分类" class="queryProductCategory"></el-input>
+    <el-input v-model="productCategoryName" placeholder="请输入分类" @input="queryByName" class="queryProductCategory"></el-input>
     <el-divider></el-divider>
 
     <el-table
@@ -283,6 +272,7 @@ export default {
       this.$refs.addForm.validate((valid) => {
         if (valid) {
           this.productCategoryForm.isDelete = 0
+          this.productCategoryForm.status = 1
           // this.productCategoryForm.status = this.productCategoryForm.status ? 0 : 1
           // console.log(this.productCategoryForm)
           this.httpRequest.post("/back/productCategory/appendProductCategory", this.productCategoryForm).then(response => {

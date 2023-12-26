@@ -10,7 +10,7 @@
         :before-close="addHandleClose">
 
       <span>
-          <el-form ref="addForm" :model="productForm" label-width="100px" :rules="rules">
+          <el-form ref="addForm" :model="productForm" label-width="140px" :rules="rules">
             <el-form-item label="产品名称" prop="productName">
               <el-input type="text" v-model="productForm.productName"></el-input>
             </el-form-item>
@@ -19,15 +19,6 @@
               <el-input type="text" v-model="productForm.productPrice"></el-input>
             </el-form-item>
 
-             <el-form-item label="上架状态" prop="status">
-              <el-switch
-                  v-model="productForm.status"
-                  :active-value="0"
-                  :inactive-value="1"
-                  active-color="#13ce66"
-                  inactive-color="#ff4949">
-              </el-switch>
-            </el-form-item>
 
             <el-form-item label="logo" prop="productLogo">
                <el-upload
@@ -64,7 +55,7 @@
             </el-form-item>
 
             <el-form-item label="产品分类" prop="productCategoryId">
-              <el-select v-model="productForm.productCategoryId" placeholder="请选择发货方式">
+              <el-select v-model="productForm.productCategoryId" placeholder="请选择产品分类">
                 <el-option
                     v-for="item in productCategoryIdAndNameOptions"
                     :key="item.productCategoryId"
@@ -87,11 +78,11 @@
     <el-dialog
         title="产品信息修改"
         :visible="productEditVisible"
-        width="30%"
+        width="60%"
         :before-close="editHandleClose">
 
       <span>
-          <el-form ref="addForm" :model="productForm" label-width="100px" :rules="rules">
+          <el-form ref="addForm" :model="productForm" label-width="140px" :rules="rules">
             <el-form-item label="产品名称" prop="productName">
               <el-input type="text" v-model="productForm.productName"></el-input>
             </el-form-item>
@@ -155,8 +146,16 @@
     </el-dialog>
 
 
-    <el-button type="success" class="queryButton" @click="queryByName">产品查询</el-button>
-    <el-input v-model="productName" placeholder="请输入产品名" class="queryProduct"></el-input>
+<!--    <el-button type="success" class="queryButton" @click="queryByName">产品查询</el-button>-->
+    <el-select v-model="productForm.productCategoryId" :clearable="true" placeholder="产品分类" style="float: right" @change="requestProductByCategoryId">
+      <el-option
+          v-for="item in productCategoryIdAndNameOptions"
+          :key="item.productCategoryId"
+          :label="item.productCategoryName"
+          :value="item.productCategoryId">
+      </el-option>
+    </el-select>
+    <el-input v-model="productName" placeholder="请输入产品名" @input="queryByName" class="queryProduct"></el-input>
     <el-divider></el-divider>
 
     <el-table
@@ -353,6 +352,7 @@ export default {
   name: "manage",
   data() {
     return {
+      queryByCategoryId:"",
       productCategoryIdAndNameOptions:[],
       productMethods:[{
         value: 0,
@@ -374,8 +374,13 @@ export default {
       productAddVisible: false,
       productForm: {},
       rules: {
-        productName: [{required: true, message: '产品分类名不能为空', trigger: "blur"}],
-        productCategoryLogo: [{required: true, message: '产品分类logo不能为空', trigger: "blur"}],
+        productName: [{required: true, message: '产品名不能为空', trigger: "blur"}],
+        productLogo: [{required: true, message: '产品logo不能为空', trigger: "blur"}],
+        price: [{required: true, message: '产品价格不能为空', trigger: "blur"}],
+        productCategoryId: [{required: true, message: '产品分类不能为空', trigger: "blur"}],
+        productMethod: [{required: true, message: '发货方式不能为空', trigger: "blur"}],
+        productDesc: [{required: true, message: '产品注意事项不能为空', trigger: "blur"}],
+        productWarn: [{required: true, message: '产品警告事项不能为空', trigger: "blur"}],
       },
 
 
@@ -397,6 +402,8 @@ export default {
   created() {
     window.document.title = "产品管理"
     this.changeCurrentPageHandler(this.pagination.currentPage)
+    this.requestProductCategoryIdAndNameList()
+
   },
 
   methods: {
@@ -406,6 +413,7 @@ export default {
       this.httpRequest.get("back/product/requestPageList?page=" + currentPage +
           "&limit=" + this.pagination.pageSize +
           "&productName=" + this.productName +
+          "&productCategoryId=" + this.queryByCategoryId +
           "&orderFiled=product_id" +
           "&orderType=1")
           .then(response => {
@@ -417,6 +425,12 @@ export default {
             this.pagination.totalPage = response.data.productPageList.totalPage
             this.productList = response.data.productPageList.resultList
           })
+    },
+
+    // 获取数据 根据分类
+    requestProductByCategoryId(value){
+      this.queryByCategoryId = value
+      this.changeCurrentPageHandler(1)
     },
 
     // 点击查看文本
@@ -446,7 +460,6 @@ export default {
     showProductAddForm() {
       this.productForm = {}
       this.productAddVisible = true
-      this.requestProductCategoryIdAndNameList()
     },
 
     // 获取可用产品分类id和名字
@@ -469,6 +482,8 @@ export default {
           this.productForm.isDelete = 0
           this.productForm.productStock = 0
           this.productForm.productLockStock = 0
+          this.productForm.status = 1
+
           // this.productForm.status = this.productForm.status ? 0 : 1
           // console.log(this.productForm)
 
@@ -491,13 +506,14 @@ export default {
       this.productForm = data
       this.productEditVisible = true
 
-      this.requestProductCategoryIdAndNameList()
 
     },
 
     // 关闭产品分类编辑对话框
     editHandleClose() {
       this.productEditVisible = false
+      this.productForm = {}
+      this.$refs.uploadSingle.clearFiles()
     },
 
 
@@ -580,7 +596,7 @@ export default {
 .queryProduct {
   width: 15%;
   position: absolute;
-  right: 50px;
+  right: 250px;
 }
 
 .queryButton {

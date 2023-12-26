@@ -1,70 +1,18 @@
 <template>
   <div class="product_category_list">
-    <el-button type="primary" icon="el-icon-circle-plus" circle class="addProduct"
-               @click="showProductAddForm"></el-button>
+    <el-button type="primary" icon="el-icon-circle-plus" circle class="addGoods"
+               @click="showGoodsAddForm"></el-button>
     <!--产品添加-->
     <el-dialog
-        title="产品添加"
-        :visible="productAddVisible"
+        title="商品添加"
+        :visible="goodsAddVisible"
         width="60%"
         :before-close="addHandleClose">
 
       <span>
-          <el-form ref="addForm" :model="productForm" label-width="100px" :rules="rules">
-            <el-form-item label="产品名称" prop="productName">
-              <el-input type="text" v-model="productForm.productName"></el-input>
-            </el-form-item>
-
-            <el-form-item label="产品单价" prop="productPrice">
-              <el-input type="text" v-model="productForm.productPrice"></el-input>
-            </el-form-item>
-
-             <el-form-item label="上架状态" prop="status">
-              <el-switch
-                  v-model="productForm.status"
-                  :active-value="0"
-                  :inactive-value="1"
-                  active-color="#13ce66"
-                  inactive-color="#ff4949">
-              </el-switch>
-            </el-form-item>
-
-            <el-form-item label="logo" prop="productLogo">
-               <el-upload
-                   class="upload-demo"
-                   ref="uploadSingle"
-                   :headers="header"
-                   name="file"
-                   :show-file-list="true"
-                   :limit="1"
-                   :action="singleUploadUrl"
-                   :on-success="uploadSuccess">
-                 <el-button size="small" type="primary">点击上传</el-button>
-              </el-upload>
-            </el-form-item>
-
-            <el-form-item label="发货方法" prop="productMethod">
-              <el-select v-model="productForm.productMethod" placeholder="请选择发货方式">
-                <el-option
-                    v-for="item in productMethods"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value">
-                </el-option>
-              </el-select>
-            </el-form-item>
-
-            <el-form-item label="注意事项:分割" prop="productDesc">
-              <el-input type="text" v-model="productForm.productDesc"></el-input>
-            </el-form-item>
-
-
-            <el-form-item label="警告事项:分割" prop="productWarn">
-              <el-input type="text" v-model="productForm.productWarn"></el-input>
-            </el-form-item>
-
-            <el-form-item label="产品分类" prop="productCategoryId">
-              <el-select v-model="productForm.productCategoryId" placeholder="请选择发货方式">
+          <el-form ref="addForm" :model="goodsForm" label-width="140px" :rules="rules">
+            <el-form-item label="所属产品分类" prop="productCategoryId">
+              <el-select  v-model="goodsForm.productCategoryId" @change="requestProductIdAndNameList" placeholder="请选择所属产品分类">
                 <el-option
                     v-for="item in productCategoryIdAndNameOptions"
                     :key="item.productCategoryId"
@@ -74,68 +22,40 @@
               </el-select>
             </el-form-item>
 
+            <el-form-item label="所属产品" prop="productId">
+              <el-select ref="selectProduct" :clearable="true" v-model="goodsForm.productId" placeholder="请选择所属产品">
+                <el-option
+                    v-for="item in productIdAndNameOptions"
+                    :key="item.productId"
+                    :label="item.productName"
+                    :value="item.productId">
+                </el-option>
+              </el-select>
+            </el-form-item>
+
+            <el-form-item label="商品详情" prop="goodsDetail">
+              <el-input type="textarea" v-model="goodsForm.goodsDetail"></el-input>
+            </el-form-item>
           </el-form>
       </span>
 
       <span slot="footer" class="dialog-footer">
-    <el-button @click="productAddVisible = false">取 消</el-button>
-    <el-button type="primary" @click="addProduct">添加</el-button>
+    <el-button @click="goodsAddVisible = false">取 消</el-button>
+    <el-button type="primary" @click="addGoods">添加</el-button>
   </span>
     </el-dialog>
 
     <!--  产品修改-->
     <el-dialog
         title="产品信息修改"
-        :visible="productEditVisible"
-        width="30%"
+        :visible="goodsEditVisible"
+        width="60%"
         :before-close="editHandleClose">
 
       <span>
-          <el-form ref="addForm" :model="productForm" label-width="100px" :rules="rules">
-            <el-form-item label="产品名称" prop="productName">
-              <el-input type="text" v-model="productForm.productName"></el-input>
-            </el-form-item>
-
-            <el-form-item label="产品单价" prop="productPrice">
-              <el-input type="text" v-model="productForm.productPrice"></el-input>
-            </el-form-item>
-
-            <el-form-item label="logo" prop="productLogo">
-               <el-upload
-                   class="upload-demo"
-                   ref="uploadSingle"
-                   :headers="header"
-                   name="file"
-                   :show-file-list="true"
-                   :limit="1"
-                   :action="singleUploadUrl"
-                   :on-success="uploadSuccess">
-                 <el-button size="small" type="primary">点击上传</el-button>
-              </el-upload>
-            </el-form-item>
-
-            <el-form-item label="发货方法" prop="productMethod">
-              <el-select v-model="productForm.productMethod" placeholder="请选择发货方式">
-                <el-option
-                    v-for="item in productMethods"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value">
-                </el-option>
-              </el-select>
-            </el-form-item>
-
-            <el-form-item label="注意事项:分割" prop="productDesc">
-              <el-input type="text" v-model="productForm.productDesc"></el-input>
-            </el-form-item>
-
-
-            <el-form-item label="警告事项:分割" prop="productWarn">
-              <el-input type="text" v-model="productForm.productWarn"></el-input>
-            </el-form-item>
-
-            <el-form-item label="产品分类" prop="productCategoryId">
-              <el-select v-model="productForm.productCategoryId" placeholder="请选择发货方式">
+          <el-form ref="addForm" :model="goodsForm" label-width="140px" :rules="rules">
+            <el-form-item label="所属产品分类" prop="productCategoryId">
+              <el-select  v-model="goodsForm.productCategoryId" @change="requestProductIdAndNameList" placeholder="请选择所属产品分类">
                 <el-option
                     v-for="item in productCategoryIdAndNameOptions"
                     :key="item.productCategoryId"
@@ -145,36 +65,75 @@
               </el-select>
             </el-form-item>
 
-          </el-form>
+            <el-form-item label="所属产品" prop="productId">
+              <el-select ref="selectProduct" :clearable="true" v-model="goodsForm.productId" placeholder="请选择所属产品">
+                <el-option
+                    v-for="item in productIdAndNameOptions"
+                    :key="item.productId"
+                    :label="item.productName"
+                    :value="item.productId">
+                </el-option>
+              </el-select>
+            </el-form-item>
+"
+"            <el-form-item label="商品详情" prop="goodsDetail">
+              <el-input type="textarea" v-model="goodsForm.goodsDetail"></el-input>
+            </el-form-item>
+"
+"          </el-form>
       </span>
 
       <span slot="footer" class="dialog-footer">
-    <el-button @click="productEditVisible = false">取消</el-button>
+    <el-button @click="goodsEditVisible = false">取消</el-button>
     <el-button type="primary" @click="editProduct">修改</el-button>
   </span>
     </el-dialog>
 
+    <el-select v-model="goodsForm.productCategoryId" placeholder="请选择产品分类" style="float: right" @change="requestProductIdAndNameList">
+      <el-option
+          v-for="item in productCategoryIdAndNameOptions"
+          :key="item.productCategoryId"
+          :label="item.productCategoryName"
+          :value="item.productCategoryId">
+      </el-option>
+    </el-select>
 
-    <el-button type="success" class="queryButton" @click="queryByName">产品查询</el-button>
-    <el-input v-model="productName" placeholder="请输入产品名" class="queryProduct"></el-input>
+    <el-select :clearable="true" v-model="goodsForm.productId" @change="requestGoodsByProductId" style="float: right; right: 20px" placeholder="请选择所属产品">
+      <el-option
+          v-for="item in productIdAndNameOptions"
+          :key="item.productId"
+          :label="item.productName"
+          :value="item.productId">
+      </el-option>
+    </el-select>
+
+    <el-select :clearable="true" v-model="goodsForm.status" @change="requestGoodsByStatus" style="float: right; right: 40px" placeholder="请选择上架状态">
+      <el-option
+          v-for="item in states"
+          :key="item.status"
+          :label="item.text"
+          :value="item.status">
+      </el-option>
+    </el-select>
+    <el-input v-model="goodsDetail" @input="queryByGoodsDetail" placeholder="请输入商品详情" class="queryGoods"></el-input>
     <el-divider></el-divider>
 
     <el-table
-        :data="productList"
+        :data="goodsList"
         height="700"
         style="width: 100%">
       <el-table-column
-          label="产品id"
+          label="商品id"
           width="80"
           align="center">
         <template slot-scope="scope">
-          <span style="margin-left: 10px">{{ scope.row.productId }}</span>
+          <span style="margin-left: 10px">{{ scope.row.goodsId }}</span>
         </template>
       </el-table-column>
 
       <el-table-column
-          label="产品名称"
-          width="160"
+          label="所属餐品"
+          width="200"
           align="center">
         <template slot-scope="scope">
           <div slot="reference" class="name-wrapper">
@@ -184,54 +143,21 @@
       </el-table-column>
 
       <el-table-column
-          label="所属分类"
-          width="150"
+          label="商品详情"
+          width="200"
           align="center">
         <template slot-scope="scope">
           <div slot="reference" class="name-wrapper">
-            <el-tag size="medium">{{ scope.row.productCategoryName }}</el-tag>
+
+            <!--            <el-tag size="">{{ scope.row.productDesc }}</el-tag>-->
+            <el-button type="text" v-clipboard:copy="scope.row.goodsDetail" v-clipboard:success="onCopy">点击复制</el-button>
           </div>
         </template>
       </el-table-column>
-
-      <el-table-column
-          label="产品价格"
-          width="80"
-          align="center">
-        <template slot-scope="scope">
-          <div slot="reference" class="name-wrapper">
-            <el-tag size="medium">{{ scope.row.productPrice }}</el-tag>
-          </div>
-        </template>
-      </el-table-column>
-
-
-      <el-table-column
-          label="产品logo"
-          width="100"
-          align="center">
-        <template slot-scope="scope">
-          <!--          <div slot="reference" class="name-wrapper">-->
-          <img :src="scope.row.productLogo" style="width: 30px; height: 30px">
-          <!--          </div>-->
-        </template>
-      </el-table-column>
-
-      <el-table-column
-          label="发货方式"
-          width="80"
-          align="center">
-        <template slot-scope="scope">
-          <div slot="reference" class="name-wrapper">
-            <el-tag size="medium">{{ scope.row.productMethod === 1 ? "手动" : "自动" }}</el-tag>
-          </div>
-        </template>
-      </el-table-column>
-
 
       <el-table-column
           label="创建时间"
-          width="160"
+          width="250"
           align="center">
         <template slot-scope="scope">
           <div slot="reference" class="name-wrapper">
@@ -242,7 +168,7 @@
 
       <el-table-column
           label="更新时间"
-          width="160"
+          width="250"
           align="center">
         <template slot-scope="scope">
           <div slot="reference" class="name-wrapper">
@@ -253,13 +179,12 @@
 
       <el-table-column
           label="上架状态"
-          width="80"
+          width="150"
           align="center">
         <template slot-scope="scope">
-
           <el-switch
-              :active-value="0"
-              :inactive-value="1"
+              :active-value=0
+              :inactive-value=1
               @change="checkStatus(scope.row, $event)"
               v-model="scope.row.status"
               active-color="#13ce66"
@@ -268,53 +193,17 @@
         </template>
       </el-table-column>
 
+
       <el-table-column
-          label="注意事项"
-          width="80"
+          label="商品状态"
+          width="150"
           align="center">
         <template slot-scope="scope">
           <div slot="reference" class="name-wrapper">
-            <!--            <el-tag size="">{{ scope.row.productDesc }}</el-tag>-->
-            <el-button type="text" @click="showDesc(scope.row.productDesc)">点击查看</el-button>
+            <el-tag size="" type="success">{{ scope.row.goodsStatus == 0 ? "可用": scope.row.goodsStatus == 1 ? "已售" : "锁定" }}</el-tag>
           </div>
         </template>
       </el-table-column>
-
-      <el-table-column
-          label="警告事项"
-          width="80"
-          align="center">
-        <template slot-scope="scope">
-          <div slot="reference" class="name-wrapper">
-            <!--            <el-tag size="">{{ scope.row.productWarn }}</el-tag>-->
-            <el-button type="text" @click="showDesc(scope.row.productWarn)">点击查看</el-button>
-
-          </div>
-        </template>
-      </el-table-column>
-
-      <el-table-column
-          label="库存量"
-          width="70"
-          align="center">
-        <template slot-scope="scope">
-          <div slot="reference" class="name-wrapper">
-            <el-tag size="">{{ scope.row.productStock }}</el-tag>
-          </div>
-        </template>
-      </el-table-column>
-
-      <el-table-column
-          label="锁定库存"
-          width="80"
-          align="center">
-        <template slot-scope="scope">
-          <div slot="reference" class="name-wrapper">
-            <el-tag size="">{{ scope.row.productLockStock }}</el-tag>
-          </div>
-        </template>
-      </el-table-column>
-
 
       <el-table-column
           label="操作"
@@ -353,29 +242,31 @@ export default {
   name: "manage",
   data() {
     return {
+      states:[
+        {
+          text: "已上架",
+          status: 0
+        },
+        {
+          text: "已下架",
+          status: 1
+        },
+      ],
+      queryByProductId:"",
+      queryStatus:"",
+      productIdAndNameOptions:[],
       productCategoryIdAndNameOptions:[],
-      productMethods:[{
-        value: 0,
-        label: '自动'
-      }, {
-        value: 1,
-        label: '手动'
-      }],
-      productEditVisible: false,
-      productList: [],
+      goodsEditVisible: false,
+      goodsList: [],
 
-      productName: "",
+      goodsDetail: "",
 
-      singleUploadUrl: "http://localhost:8888/back/web-file-generate/single",
-
-      header: {
-        token: localStorage.getItem("token")
-      },
-      productAddVisible: false,
-      productForm: {},
+      goodsAddVisible: false,
+      goodsForm: {},
       rules: {
-        productName: [{required: true, message: '产品分类名不能为空', trigger: "blur"}],
-        productCategoryLogo: [{required: true, message: '产品分类logo不能为空', trigger: "blur"}],
+        productCategoryId: [{required: true, message: '产品分类不能为空', trigger: "blur"}],
+        productId: [{required: true, message: '产品不能为空', trigger: "blur"}],
+        goodsDetail: [{required: true, message: '商品详情不能为空', trigger: "blur"}],
       },
 
 
@@ -395,29 +286,50 @@ export default {
   },
 
   created() {
-    window.document.title = "产品管理"
+    window.document.title = "商品管理"
     this.changeCurrentPageHandler(this.pagination.currentPage)
+    this.requestProductCategoryIdAndNameList()
   },
 
   methods: {
 
     // 获取数据
     changeCurrentPageHandler(currentPage) {
-      this.httpRequest.get("back/product/requestPageList?page=" + currentPage +
+      this.httpRequest.get("back/goods/requestPageList?page=" + currentPage +
           "&limit=" + this.pagination.pageSize +
-          "&productName=" + this.productName +
-          "&orderFiled=product_id" +
+          "&goodsDetail=" + this.goodsDetail +
+          "&productId=" + this.queryByProductId +
+          "&status=" + this.queryStatus +
+          "&orderFiled=goods_id" +
           "&orderType=1")
           .then(response => {
 
             console.log(response)
-            this.pagination.currentPage = response.data.productPageList.currentPage
-            this.pagination.pageSize = response.data.productPageList.pageSize
-            this.pagination.total = response.data.productPageList.totalSize
-            this.pagination.totalPage = response.data.productPageList.totalPage
-            this.productList = response.data.productPageList.resultList
+            this.pagination.currentPage = response.data.goodsPageList.currentPage
+            this.pagination.pageSize = response.data.goodsPageList.pageSize
+            this.pagination.total = response.data.goodsPageList.totalSize
+            this.pagination.totalPage = response.data.goodsPageList.totalPage
+            this.goodsList = response.data.goodsPageList.resultList
           })
     },
+
+    // 复制消息提示
+    onCopy(){
+      this.$message.success("Copy Success")
+    },
+
+    // 获取数据 根据分类
+    requestGoodsByProductId(value){
+      this.queryByProductId = value
+      this.changeCurrentPageHandler(1)
+    },
+
+    // 获取数据 根据状态
+    requestGoodsByStatus(value){
+      this.queryStatus = value
+      this.changeCurrentPageHandler(1)
+    },
+
 
     // 点击查看文本
     showDesc(text){
@@ -433,20 +345,20 @@ export default {
     },
 
     // 查询数据
-    queryByName() {
+    queryByGoodsDetail() {
       this.changeCurrentPageHandler(1)
     },
 
     // 关闭添加产品分类对话框
     addHandleClose() {
-      this.productAddVisible = false
+      this.goodsAddVisible = false
+      this.goodsForm = {}
     },
 
     // 打开添加产品分类对话框
-    showProductAddForm() {
-      this.productForm = {}
-      this.productAddVisible = true
-      this.requestProductCategoryIdAndNameList()
+    showGoodsAddForm() {
+      this.goodsForm = {}
+      this.goodsAddVisible = true
     },
 
     // 获取可用产品分类id和名字
@@ -460,23 +372,39 @@ export default {
           })
     },
 
+    // 根据产品分类id获取可用商品id和名字
+    requestProductIdAndNameList(){
+      // this.goodsForm.productId = ""
+      // this.$refs.selectProduct.value = ""
+      // this.$forceUpdate()
+      this.httpRequest.get("/back/product/requestProductIdAndNameListByCategoryId/" + this.goodsForm.productCategoryId)
+          .then(response => {
+            console.log(response)
+            this.productIdAndNameOptions = response.data.productIdAndNameList
+
+
+          })
+
+    },
+
 
     // 添加产品分类
-    addProduct() {
+    addGoods() {
 
       this.$refs.addForm.validate((valid) => {
         if (valid) {
-          this.productForm.isDelete = 0
-          this.productForm.productStock = 0
-          this.productForm.productLockStock = 0
-          // this.productForm.status = this.productForm.status ? 0 : 1
-          // console.log(this.productForm)
+          this.goodsForm.isDelete = 0
+          this.goodsForm.goodsStatus = 0
+          this.goodsForm.status = 1
 
-          this.httpRequest.post("/back/product/appendProduct", this.productForm).then(response => {
+
+          // console.log(this.goodsForm.status)
+
+          this.httpRequest.post("/back/goods/appendGoods", this.goodsForm).then(response => {
             this.changeCurrentPageHandler(1)
-            this.productAddVisible = false
-            this.productForm = {}
-            this.$refs.uploadSingle.clearFiles()
+            this.goodsAddVisible = false
+            this.productIdAndNameOptions = []
+            this.goodsForm = {}
           })
         } else {
           message.error("请完善数据")
@@ -488,8 +416,9 @@ export default {
     // 打开编辑产品分类对话框
     handleEdit(index, data) {
       // console.log(data)
-      this.productForm = data
-      this.productEditVisible = true
+      this.goodsForm = data
+      this.requestProductIdAndNameList()
+      this.goodsEditVisible = true
 
       this.requestProductCategoryIdAndNameList()
 
@@ -497,7 +426,7 @@ export default {
 
     // 关闭产品分类编辑对话框
     editHandleClose() {
-      this.productEditVisible = false
+      this.goodsEditVisible = false
     },
 
 
@@ -505,14 +434,13 @@ export default {
     editProduct() {
       this.$refs.addForm.validate((valid) => {
         if (valid) {
-          this.productForm.isDelete = 0
-          // this.productForm.status = this.productForm.status ? 0 : 1
-          // console.log(this.productForm)
-          this.httpRequest.put("/back/product/alterProduct", this.productForm).then(response => {
+          this.goodsForm.isDelete = 0
+          // this.goodsForm.status = this.goodsForm.status ? 0 : 1
+          // console.log(this.goodsForm)
+          this.httpRequest.put("/back/goods/alterGoods", this.goodsForm).then(response => {
             this.changeCurrentPageHandler(this.pagination.currentPage)
-            this.productEditVisible = false
-            this.productForm = {}
-            this.$refs.uploadSingle.clearFiles()
+            this.goodsEditVisible = false
+            this.goodsForm = {}
           })
         } else {
           message.error("请完善数据")
@@ -524,12 +452,12 @@ export default {
     // 删除产品分类
     handleDelete(index, data) {
 
-      this.$confirm("确定要删除该产品吗?", {
+      this.$confirm("确定要删除该商品吗?", {
         type: "warning",
         beforeClose: async (action, instance, done) => {
           if (action === 'confirm') {
             // console.log("群定了")
-            this.httpRequest.delete("back/product/removeProduct/" + data.productId).then(response => {
+            this.httpRequest.delete("back/goods/removeGoods/" + data.goodsId).then(response => {
               this.changeCurrentPageHandler(1)
             })
             done()
@@ -542,25 +470,14 @@ export default {
 
     },
 
-    // 文件上传成功钩子
-    uploadSuccess(response) {
-      if (response.code >= 10000 && response.code < 20000) {
-        // console.log(response)
-        this.productForm.productLogo = response.url
-        this.$message.success(response.msg)
-      } else {
-        this.$message.error(response.msg)
-      }
-    },
-
     // 修改产品分类上架状态
-    checkStatus(product, value) {
+    checkStatus(goods, value) {
       // value 参数表示开关的最新状态，true 表示开启，false 表示关闭
       // console.log('开关状态变化:', productCategory, "数据", value);
 
 
-      this.httpRequest.put("back/product/alterProductStatus", {
-        "productId": product.productId,
+      this.httpRequest.put("back/goods/alterGoodsStatus", {
+        "goodsId": goods.goodsId,
         "status": value
       })
     }
@@ -573,14 +490,14 @@ export default {
 </script>
 
 <style scoped>
-.addProduct {
+.addGoods {
   margin-left: 20px;
 }
 
-.queryProduct {
+.queryGoods {
   width: 15%;
   position: absolute;
-  right: 50px;
+  right: 750px;
 }
 
 .queryButton {

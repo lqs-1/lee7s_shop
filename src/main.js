@@ -17,6 +17,11 @@ Vue.prototype.$echarts = echarts
 import httpRequest from './http/index'
 Vue.prototype.httpRequest = httpRequest
 
+// 添加一键复制
+import VueClipboard from 'vue-clipboard2';
+Vue.use(VueClipboard);
+
+
 
 
 Vue.config.productionTip = false
