@@ -2,9 +2,9 @@
   <div>
 
     <el-dialog
-        title="商品详情"
+        title="订单详情"
         :visible="goodsVisible"
-        width="80%"
+        width="85%"
         :before-close="addHandleClose">
 
 
@@ -14,8 +14,9 @@
                 :title="item"
                 type="success">
       </el-alert>
+      <br>
 
-      <el-divider></el-divider>
+<!--      <el-divider></el-divider>-->
 
 
       <el-alert :closable="false"
@@ -24,8 +25,8 @@
                 :title="item"
                 type="error">
       </el-alert>
-
-      <el-divider></el-divider>
+      <br>
+<!--      <el-divider></el-divider>-->
       <span>
           <el-form ref="orderForm" :model="orderForm" label-width="80px" :rules="rules">
             <el-form-item label="产品名" prop="productName">

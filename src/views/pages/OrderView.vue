@@ -3,28 +3,27 @@
         <center>
             <div style="height: 5vh; width: 95%">
                 <el-input placeholder="输入订单号" v-model="searchKey" clearable @clear="clearListAndKey">
-                    <el-button :loading="isResponse" slot="append" icon="el-icon-search" @click="getOrder">查询
-                    </el-button>
+                    <el-button :loading="isResponse" slot="append" icon="el-icon-search" @click="getOrder">查询</el-button>
                 </el-input>
             </div>
         </center>
 
         <center>
-            <div style="height: 5vh; width: 95%; margin-top: 20px;">
+            <div style="height: 5vh; width: 95%; margin-top: 20px;" v-if="order">
                 <el-alert :closable="false"
-                          :title="'商品: ' + order.goodsName"
+                          :title="'商品: ' + order.productName"
                           type="success">
                 </el-alert>
                 <el-alert :closable="false"
-                          :title="'单价: ' + order.price"
+                          :title="'单价: ' + order.goodsPrice"
                           type="warning">
                 </el-alert>
                 <el-alert :closable="false"
-                          :title="'数量: ' + order.num"
+                          :title="'数量: ' + order.goodsNum"
                           type="success">
                 </el-alert>
                 <el-alert :closable="false"
-                          :title="'状态: ' + order.orderStatus"
+                          :title="'状态: ' + order.orderStatus == 0? '锁定': order.orderStatus == 1? '已完成' : '已取消'"
                           type="warning">
                 </el-alert>
                 <el-alert :closable="false"
@@ -43,7 +42,7 @@
                 <el-divider></el-divider>
 
                 <el-table
-                        :data="order.items"
+                        :data="order.goodsDetailList"
                         style="width: 100%; margin-top: 10px"
                         align="center">
                     <el-table-column
@@ -54,7 +53,7 @@
                         <template slot-scope="scope">
                             <div slot="reference" class="name-wrapper">
                                 <el-alert :closable="false"
-                                          :title="'商品: ' + scope.row.detail"
+                                          :title="'商品: ' + scope.row"
                                           type="error">
                                 </el-alert>
                             </div>
@@ -80,33 +79,12 @@ export default {
             searchKey: null,
             isResponse: false,
 
-            order: {
-                goodsName: "telegram成品号-美国",
-                price: "34",
-                num: "3",
-                orderStatus: "已完成",
-                email: "liqisong2002@gmail.com dddddd",
-                createTime: "2023-10-7 12:23:21",
-                updateTime: "2023-10-7 12:24:21",
-                items: [
-                     {
-                        detail: "账号17298816234，密码2323423，密保：你妈妈是谁 - lee7s，你多大了 - 20岁"
-                    },
-                    {
-                        detail: "账号17298816234，密码2323423，密保：你妈妈是谁 - lee7s，你多大了 - 20岁"
-                    },
-                    {
-                        detail: "账号17298816234，密码2323423，密保：你妈妈是谁 - lee7s，你多大了 - 20岁"
-                    },
-                    {
-                        detail: "账号17298816234，密码2323423，密保：你妈妈是谁 - lee7s，你多大了 - 20岁"
-                    },
-                ]
-            }
+            order: false
         }
     },
 
     created() {
+      console.log(this.order)
         window.document.title = "订单查询"
         let flag = navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i)
         if (flag) {
@@ -117,7 +95,7 @@ export default {
 
     methods: {
         clearListAndKey() {
-            this.order = {}
+            this.order = false
             this.searchKey = null
             this.isResponse = false
         },
@@ -128,7 +106,7 @@ export default {
                 this.$message.info("请输入订单号")
             } else {
                 this.isResponse = true
-                this.httpRequest.get("/back/order/query?searchKey=" + this.searchKey)
+                this.httpRequest.get("/back/order/requestOrderByOrderSn/" + this.searchKey)
                     .then(resp => {
                         this.order = resp.data.order
                         this.isResponse = false

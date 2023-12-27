@@ -14,7 +14,7 @@
 
                 </el-menu>
             </el-header>
-            <el-main style="width: 95%; height: 88vh;margin: 0 auto; margin-top: 15px;margin-bottom:15px;background-color: #fff;border-radius:10px ;">
+            <el-main style="width: 95%; height: 87vh;margin: 0 auto; margin-top: 15px;margin-bottom:15px;background-color: #fff;border-radius:10px ;">
                 <router-view/>
             </el-main>
         </el-container>
