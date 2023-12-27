@@ -195,7 +195,7 @@ export default {
 
       productCategoryName: "",
 
-      singleUploadUrl: "http://localhost:8888/back/web-file-generate/single",
+      singleUploadUrl: "https://nobibibi.top/back/web-file-generate/single",
 
       header: {
         token: localStorage.getItem("token")
@@ -357,14 +357,12 @@ export default {
 
     // 修改产品分类上架状态
     checkStatus(productCategory, value) {
-      // value 参数表示开关的最新状态，true 表示开启，false 表示关闭
-      // console.log('开关状态变化:', productCategory, "数据", value);
-
 
       this.httpRequest.put("back/productCategory/alterProductCategoryStatus", {
         "productCategoryId": productCategory.productCategoryId,
         "status": value
       })
+
     }
 
 

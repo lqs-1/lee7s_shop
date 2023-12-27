@@ -470,16 +470,14 @@ export default {
 
     },
 
-    // 修改产品分类上架状态
+    // 修改商品分类上架状态
     checkStatus(goods, value) {
-      // value 参数表示开关的最新状态，true 表示开启，false 表示关闭
-      // console.log('开关状态变化:', productCategory, "数据", value);
-
 
       this.httpRequest.put("back/goods/alterGoodsStatus", {
         "goodsId": goods.goodsId,
         "status": value
       })
+
     }
 
 
