@@ -23,7 +23,7 @@ import java.time.LocalDateTime;
 public class Product {
 
     @ApiModelProperty("产品id")
-    @TableId("product_id")
+    @TableId(value = "product_id", type = IdType.AUTO)
     private Integer productId;
 
     @ApiModelProperty("产品分类id")

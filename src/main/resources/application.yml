@@ -3,20 +3,21 @@ mybatis-plus:
     db-config:
       logic-delete-value: 1
       logic-not-delete-value: 0
+#      id-type: auto
   mapper-locations: classpath:/mapper/*.xml
 
-  configuration:
+#  configuration:
     ### 开启打印sql配置
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 spring:
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    #    url: jdbc:mysql://172.245.10.200:3306/storage?serverTimezone=GMT%2B8&useSSL=false&useLegacyDatetimeCode=false&allowPublicKeyRetrieval=true
-    #    username: somg
-    #    password: somg
-    url: jdbc:mysql://localhost:3306/account_shop?serverTimezone=GMT%2B8&useSSL=false&useLegacyDatetimeCode=false&allowPublicKeyRetrieval=true
-    username: root
-    password: 123456
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://172.245.10.200:3306/account_shop?serverTimezone=GMT%2B8&useSSL=false&useLegacyDatetimeCode=false&allowPublicKeyRetrieval=true
+    username: account_shop
+    password: 6CN6Aapd2mHAAEEx
+#    url: jdbc:mysql://localhost:3306/account_shop?serverTimezone=GMT%2B8&useSSL=false&useLegacyDatetimeCode=false&allowPublicKeyRetrieval=true
+#    username: root
+#    password: 123456
     type: com.alibaba.druid.pool.DruidDataSource
   # 整合swagger的时候版本过高的解决办法
   mvc:
@@ -48,9 +49,11 @@ spring:
     # 配置 SMTP 服务器地址
     host: smtp.gmail.com
     # 发送者邮箱
-    username: lee7s.qs@gmail.com
     # 配置密码，注意不是真正的密码，而是刚刚申请到的授权码
-    password: mciovxwvabjywzlf
+#    username: lee7s.qs@gmail.com
+#    password: mciovxwvabjywzlf
+    username: qisomg@gmail.com
+    password: sqdcczvialajvjtv
     # 端口号465或587
     port: 465
     # 默认的邮件编码为UTF-8

@@ -75,6 +75,8 @@ public class SecurityConfigurerAdapter extends WebSecurityConfigurerAdapter {
                         "/user/captcha",
                         "/shop/**",
                         "/back/order/pay",
+                        "/back/order/notify",
+                        "/back/order/requestOrderByOrderSn/**",
                         "/",
                         "/favicon.ico",
                         "/static/**",

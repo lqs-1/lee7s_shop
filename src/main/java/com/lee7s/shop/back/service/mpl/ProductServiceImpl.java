@@ -139,6 +139,13 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
     @Override
     public R alterProductStatus(Product product) {
 
+        if (product.getStatus() == Constant.ProductStatus.OFF.getStatusCode()){
+            if (this.baseMapper.selectById(product.getProductId()).getProductLockStock() >= 1){
+                return R.error(REnum.PRODUCT_STATUS_ALTER_FAIL.getStatusCode(),
+                        REnum.PRODUCT_STATUS_ALTER_FAIL.getStatusMsg());
+            }
+        }
+
         this.baseMapper.updateById(product);
 
         return R.ok(REnum.PRODUCT_STATUS_ALTER_SUCCESS.getStatusCode(),
@@ -215,5 +222,56 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
         Product product = this.baseMapper.selectById(productId);
         product.setProductLockStock(product.getProductLockStock() + num);
         this.baseMapper.updateById(product);
+    }
+
+
+    /**
+     * 根据产品解锁库存 解锁锁定库存
+     * @param productId
+     * @param num
+     */
+    @Transactional(readOnly = false, rollbackFor = Exception.class)
+    @Override
+    public void recoverProductLockStock(Integer productId, Integer num) {
+        Product product = this.baseMapper.selectById(productId);
+        product.setProductLockStock(product.getProductLockStock() - num);
+        this.baseMapper.updateById(product);
+    }
+
+    /**
+     * 支付成功 扣减库存
+     * @param productId
+     * @param goodsNum
+     */
+    @Transactional(readOnly = false, rollbackFor = Exception.class)
+    @Override
+    public void deductionStock(Integer productId, Integer goodsNum) {
+
+        Product product = this.baseMapper.selectById(productId);
+        product.setProductLockStock(product.getProductLockStock() - goodsNum);
+        product.setProductStock(product.getProductStock() - goodsNum);
+
+        this.baseMapper.updateById(product);
+    }
+
+    /**
+     * 查看产品分类下是否存在有锁定库存的产品
+     * @param productCategoryId
+     * @return
+     */
+    @Override
+    public Boolean hasLockStockProductByProductCategoryId(Integer productCategoryId) {
+
+        Boolean hasStock = false;
+
+        List<Product> productList = this.baseMapper.selectList(new LambdaQueryWrapper<Product>().eq(Product::getProductCategoryId, productCategoryId));
+
+        for (Product product : productList) {
+            if (product.getProductLockStock() >= 1){
+                hasStock = true;
+                break;
+            }
+        }
+        return hasStock;
     }
 }

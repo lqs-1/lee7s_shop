@@ -10,6 +10,7 @@ import com.lee7s.shop.back.constant.REnum;
 import com.lee7s.shop.back.entity.ProductCategory;
 import com.lee7s.shop.back.mapper.ProductCategoryMapper;
 import com.lee7s.shop.back.service.ProductCategoryService;
+import com.lee7s.shop.back.service.ProductService;
 import com.lee7s.shop.back.utils.Pagination.PageUtils;
 import com.lee7s.shop.back.utils.Pagination.QueryPage;
 import com.lee7s.shop.back.utils.R;
@@ -128,6 +129,7 @@ public class ProductCategoryServiceImpl extends ServiceImpl<ProductCategoryMappe
     @Transactional(readOnly = false, rollbackFor = Exception.class)
     @Override
     public R alterProductCategoryStatus(ProductCategory productCategory) {
+
         this.baseMapper.updateById(productCategory);
         return R.ok(REnum.PRODUCT_CATEGORY_STATUS_ALTER_SUCCESS.getStatusCode(),
                 REnum.PRODUCT_CATEGORY_STATUS_ALTER_SUCCESS.getStatusMsg());

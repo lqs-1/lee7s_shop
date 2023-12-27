@@ -1,8 +1,10 @@
 package com.lee7s.shop.back.controller;
 
+import com.lee7s.shop.back.constant.Constant;
 import com.lee7s.shop.back.constant.REnum;
 import com.lee7s.shop.back.entity.ProductCategory;
 import com.lee7s.shop.back.service.ProductCategoryService;
+import com.lee7s.shop.back.service.ProductService;
 import com.lee7s.shop.back.utils.Pagination.PageUtils;
 import com.lee7s.shop.back.utils.R;
 import com.lee7s.shop.back.vo.ProductCategoryIdAndNameVo;
@@ -26,6 +28,9 @@ public class ProductCategoryController {
 
     @Autowired
     private ProductCategoryService productCategoryService;
+
+    @Autowired
+    private ProductService productService;
 
 
     /**
@@ -134,6 +139,12 @@ public class ProductCategoryController {
     @PutMapping("alterProductCategoryStatus")
     public R alterProductCategoryStatus(@RequestBody ProductCategory productCategory){
         try{
+            if (productCategory.getStatus() == Constant.ProductCategoryStatus.OFF.getStatusCode()){
+                if (productService.hasLockStockProductByProductCategoryId(productCategory.getProductCategoryId())){
+                    return R.error(REnum.PRODUCT_CATEGORY_STATUS_ALTER_FAIL.getStatusCode(),
+                            REnum.PRODUCT_CATEGORY_STATUS_ALTER_FAIL.getStatusMsg());
+                }
+            }
 
             R result = productCategoryService.alterProductCategoryStatus(productCategory);
 
@@ -171,10 +182,5 @@ public class ProductCategoryController {
                     REnum.REQUEST_PRODUCT_CATEGORY_ID_AND_NAME_FAIL.getStatusMsg());
         }
     }
-
-
-
-
-
 
 }

@@ -44,7 +44,7 @@ public class Constant {
 
 
     // v免签通讯密钥
-    public static final String VKey = "2141d908d0ddf4f155107bc14fa37001";
+    public static final String VKey = "2eb9e36bd3c22e41dd9c7b1c1315cd9b";
 
     // v免签地址
     public static final String VPayHOST = "https://shop.nobibibi.top/";
@@ -59,7 +59,7 @@ public class Constant {
     public static final String NOTIFY_URL = "http://nobibibi.top/back/order/notify";
 
     // 支付通知地址returnUrl
-    public static final String RETURN_URL = "http://localhost:9090";
+    public static final String RETURN_URL = "https://shop.somg.xyz";
 
 
 
@@ -75,6 +75,12 @@ public class Constant {
     public static final String ORDER_CANCEL_INVOKE_QUEUE_ROUTE_KEY = "order-cancel-invoke-queue-key";
     // 延时时间 这个时间用于自动取消订单
     public static final Integer ORDER_CANCEL_TIME_DELAY_QUEUE_TTL = 60000;
+    // 订单查询网址
+    public static final String ORDER_QUERY_URL = "https://nobibibi.top/#/order";
+    // 订单创建失败返回地址
+    public static final String ORDER_CREATE_FAIL_RETURN_URL = "localhost:9090";
+
+
 
 
 

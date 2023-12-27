@@ -84,6 +84,10 @@ public enum REnum {
 
     GET_ORDER_PAGE_LIST_SUCCESS(11041, "获取订单列表成功"),
     GET_ORDER_PAGE_LIST_FAIL(21041, "获取订单列表失败"),
+    USER_REQUEST_ORDER_SUCCESS(11042, "订单查询成功"),
+    USER_REQUEST_ORDER_FAIL(21042, "订单查询失败"),
+    SHOP_MALL_PAGE_GOODS_REQUEST_SUCCESS(11043, "获取首页商品成功"),
+    SHOP_MALL_PAGE_GOODS_REQUEST_FAIL(21043, "获取首页商品失败"),
 
 
 
@@ -93,14 +97,6 @@ public enum REnum {
 
 
     AUTH_FAIL(21024, "认证失败"),
-    EMAIL_VALIDATE_CODE_SEND_SUCCESS(11033, "邮箱验证码发送成功,有效时间5分钟"),
-    EMAIL_VALIDATE_CODE_SEND_FAIL(21033, "邮箱验证码发送失败"),
-
-    EMAIL_SEND_TO_LEE7S_SUCCESS(10053, "发送邮件给lee7s成功"),
-    EMAIL_SEND_TO_LEE7S_FAIL(20053, "发送邮件给lee7s失败"),
-
-    EMAIL_SEND_ORDER_SUCCESS(10054, "订单号邮件发送成功"),
-    EMAIL_SEND_ORDER_FAIL(20054, "订单号邮件发送失败"),
 
 
 

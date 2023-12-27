@@ -12,21 +12,12 @@ import org.springframework.stereotype.Component;
 
 @Data
 @Component
-@ConfigurationProperties(prefix = "email.somg")
+@ConfigurationProperties(prefix = "email.lee7s")
 public class EmailProperties {
 
-    private String formEmail = "lee7s.qs@gmail.com"; // 发送邮件的邮箱
+    private String formEmail; // 发送邮件的邮箱
 
-    private String formEmailNickName = "somg在线工具"; // 发送邮件的邮箱的昵称
-
-    private String subject = "somg在线工具验证码"; // 发送邮件的主题
-
-    private String sendValidateCodeContentPrefix = "尊敬的用户你本次的验证码为:"; // 邮件内容前缀 非HTML邮件使用
-
-    private Long expireTime = 300l; // 默认过期时间
-
-    private String cacheKeyPrefix = "somgEmail:"; // 缓存默认前缀
-
+    private String formEmailNickName; // 发送邮件的邮箱的昵称
 
 
 }

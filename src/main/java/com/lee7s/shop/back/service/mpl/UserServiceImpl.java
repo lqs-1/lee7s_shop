@@ -5,7 +5,6 @@ import com.lee7s.shop.back.entity.SecurityUser;
 import com.lee7s.shop.back.entity.User;
 import com.lee7s.shop.back.service.UserService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -21,7 +20,6 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 public class UserServiceImpl implements UserService, UserDetailsService {
-
     private BCryptPasswordEncoder encoder;
 
 
@@ -34,7 +32,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-
         User user = new User();
         if (username.equals(Constant.ADMIN_NAME)){
             encoder = new BCryptPasswordEncoder();
@@ -46,7 +43,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         SecurityUser securityUser = new SecurityUser();
         securityUser.setCurrentUser(user);
         return securityUser;
-
 
     }
 }

@@ -1,9 +1,6 @@
 package com.lee7s.shop.back.entity;
 
-import com.baomidou.mybatisplus.annotation.FieldFill;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
@@ -26,7 +23,7 @@ import java.time.LocalDateTime;
 public class Order {
 
     @ApiModelProperty("订单编号")
-      @TableId("order_sn")
+      @TableId(value = "order_sn", type = IdType.INPUT)
     private String orderSn;
 
     @ApiModelProperty("购买产品的id")

@@ -29,4 +29,10 @@ public interface GoodsService extends IService<Goods> {
     R alterGoodsStatus(Goods goods);
 
     List<Integer> lockGoodsByProductId(Integer productId, Integer goodsNum);
+
+    void recoverGoodsStatusByIds(List<Integer> goodsIdList);
+
+    List<Goods> alterGoodsGoodsStatusToOFF(List<Integer> goodsIdList);
+
+    List<Goods> requestGoodsListByIds(List<Integer> goodsIdList);
 }

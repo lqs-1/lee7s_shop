@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Date;
 import java.util.List;
 
 @Service
@@ -25,7 +24,6 @@ public class StorageServiceImpl implements StorageService {
      * @return
      */
     @Override
-    @Transactional(readOnly = false)
     public R singleUpload(MultipartFile file) {
 
         R result = fileUpload.build().singleFileUpload(file);

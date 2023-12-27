@@ -25,8 +25,6 @@ import java.util.List;
 @Api(tags = "上传模块")
 public class WebFileGenerateController {
 
-    @Autowired
-    private FileUploadPlus fileUpload;
 
     @Autowired
     private StorageService storageService;

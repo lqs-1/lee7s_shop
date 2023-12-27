@@ -141,7 +141,6 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
      * @return
      */
     @Transactional(readOnly = false, rollbackFor = Exception.class)
-
     @Override
     public R alterGoodsStatus(Goods goods) {
 
@@ -206,6 +205,52 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
                     return goods.getGoodsId();
                 }).collect(Collectors.toList());
         return lockGoodsIdList;
+    }
+
+
+    /**
+     * 恢复商品状态 根据商品id
+     * @param goodsIdList
+     */
+    @Transactional(readOnly = false, rollbackFor = Exception.class)
+    @Override
+    public void recoverGoodsStatusByIds(List<Integer> goodsIdList) {
+        goodsIdList.forEach(goodsId -> {
+            Goods goods = this.baseMapper.selectById(goodsId);
+            goods.setStatus(Constant.GoodsStatus.ON.getStatusCode());
+            goods.setGoodsStatus(Constant.GoodsGoodsStatus.ON.getStatusCode());
+            this.baseMapper.updateById(goods);
+        });
+    }
+
+
+    /**
+     * 修改商品们状态 并返回商品们
+     * @param goodsIdList
+     * @return
+     */
+    @Transactional(readOnly = false, rollbackFor = Exception.class)
+    @Override
+    public List<Goods> alterGoodsGoodsStatusToOFF(List<Integer> goodsIdList) {
+        List<Goods> saleGoodsList = this.baseMapper.selectBatchIds(goodsIdList).stream().map(goods -> {
+            goods.setGoodsStatus(Constant.GoodsGoodsStatus.OFF.getStatusCode());
+            return goods;
+        }).collect(Collectors.toList());
+
+        this.updateBatchById(saleGoodsList);
+        return saleGoodsList;
+    }
+
+
+    /**
+     * 根据商品id们 查询商品列表
+     * @param goodsIdList
+     * @return
+     */
+    @Override
+    public List<Goods> requestGoodsListByIds(List<Integer> goodsIdList) {
+
+        return this.baseMapper.selectBatchIds(goodsIdList);
     }
 
 }

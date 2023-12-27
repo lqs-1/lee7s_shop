@@ -1,5 +1,6 @@
 package com.lee7s.shop.back.controller.shop;
 
+import com.lee7s.shop.back.constant.REnum;
 import com.lee7s.shop.back.service.ShopService;
 import com.lee7s.shop.back.utils.R;
 import com.lee7s.shop.back.vo.ShopVo;
@@ -29,11 +30,22 @@ public class ShopController {
      */
     @GetMapping("requestShopGoodsInformation")
     public R requestShopGoodsInformation(){
-        List<ShopVo> shopGoodsInformationList = shopService.requestShopGoodsInformation();
-        return R.ok().put("shopGoodsInformationList", shopGoodsInformationList);
+
+        try {
+
+            List<ShopVo> shopGoodsInformationList = shopService.requestShopGoodsInformation();
+
+            return R.ok(REnum.SHOP_MALL_PAGE_GOODS_REQUEST_SUCCESS.getStatusCode(),
+                    REnum.SHOP_MALL_PAGE_GOODS_REQUEST_SUCCESS.getStatusMsg())
+                    .put("shopGoodsInformationList", shopGoodsInformationList);
+
+        }catch (Exception e){
+            e.printStackTrace();
+
+            return R.error(REnum.SHOP_MALL_PAGE_GOODS_REQUEST_FAIL.getStatusCode(),
+                    REnum.SHOP_MALL_PAGE_GOODS_REQUEST_FAIL.getStatusMsg());
+        }
+
     }
-
-
-
 
 }

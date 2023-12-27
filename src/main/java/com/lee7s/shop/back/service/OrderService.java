@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.lee7s.shop.back.entity.Order;
 import com.lee7s.shop.back.utils.Pagination.PageUtils;
 import com.lee7s.shop.back.vo.OrderPayVo;
+import com.lee7s.shop.back.vo.OrderVo;
 import com.lee7s.shop.back.vo.PayVo;
 import com.lee7s.shop.back.vo.VPayVo;
 
@@ -26,4 +27,8 @@ public interface OrderService extends IService<Order> {
     PageUtils requestOrderPageList(Map<String, Object> param);
 
     void orderAutoCancel(Order order);
+
+    void completeOrder(String orderSn);
+
+    OrderVo requestOrderByOrderSn(String orderSn);
 }

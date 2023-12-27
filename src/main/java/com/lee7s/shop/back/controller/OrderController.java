@@ -10,7 +10,7 @@ import com.lee7s.shop.back.utils.HttpClientUtils;
 import com.lee7s.shop.back.utils.Pagination.PageUtils;
 import com.lee7s.shop.back.utils.R;
 import com.lee7s.shop.back.vo.OrderPayVo;
-import com.lee7s.shop.back.vo.PayVo;
+import com.lee7s.shop.back.vo.OrderVo;
 import com.lee7s.shop.back.vo.VPayVo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpEntity;
@@ -20,7 +20,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -104,47 +103,86 @@ public class OrderController {
     @ResponseBody
     public String orderPay(@RequestBody OrderPayVo orderPayVo) throws Exception {
 
-        VPayVo payVo = orderService.constructOrderPayDataVPay(orderPayVo);
+        try {
 
-        HttpResponse httpResponse = HttpClientUtils.doGet(Constant.VPayHOST, Constant.VPayINTERFACE, new HashMap<>(), payVo.constructPathQueryParameter());
+            VPayVo payVo = orderService.constructOrderPayDataVPay(orderPayVo);
 
-        if (httpResponse.getStatusLine().getStatusCode() == 200) {
-            HttpEntity entity = httpResponse.getEntity();
-            String respString = EntityUtils.toString(entity);
-            HashMap<String, String> responseMap = JSON.parseObject(respString, new TypeReference<HashMap<String, String>>(){});
-            if (responseMap.get("code").equals("1")){
-                HashMap<String, String> resultMap = JSON.parseObject(responseMap.get("data"), new TypeReference<HashMap<String, String>>(){});
-                String orderId = resultMap.get("orderId");
-                // 返回支付页面
-                return Constant.VPayPAGE + orderId;
+            HttpResponse httpResponse = HttpClientUtils.doGet(Constant.VPayHOST, Constant.VPayINTERFACE, new HashMap<>(), payVo.constructPathQueryParameter());
+
+            if (httpResponse.getStatusLine().getStatusCode() == 200) {
+                HttpEntity entity = httpResponse.getEntity();
+                String respString = EntityUtils.toString(entity);
+                HashMap<String, String> responseMap = JSON.parseObject(respString, new TypeReference<HashMap<String, String>>(){});
+                if (responseMap.get("code").equals("1")){
+                    HashMap<String, String> resultMap = JSON.parseObject(responseMap.get("data"), new TypeReference<HashMap<String, String>>(){});
+                    String orderId = resultMap.get("orderId");
+                    // 返回支付页面
+                    return Constant.VPayPAGE + orderId;
+
+                }
 
             }
 
+            return Constant.ORDER_CREATE_FAIL_RETURN_URL;
+
+        }catch (Exception e){
+            e.printStackTrace();
+            // 失败返回主页
+            return Constant.ORDER_CREATE_FAIL_RETURN_URL;
         }
-        // 失败返回主页
-        return "localhost:8080";
     }
 
 
     /**
-     * 支付完成之后异步通知接口 处理订单状态 以及自动发货
+     * 支付完成之后异步通知接口 处理订单状态 以及自动发货 只有支付对应的金额才会来到这里 否则不来
      * @param request
      */
     @GetMapping("notify")
-    public void notify(HttpServletRequest request){
-        log.warn("get请求的notify");
+    public String notify(HttpServletRequest request){
 
-        // 获取所有参数的名称
-        Enumeration<String> parameterNames = request.getParameterNames();
+        try {
 
-        // 遍历参数名称
-        while (parameterNames.hasMoreElements()) {
-            String paramName = parameterNames.nextElement();
+            // 获取订单号
+            String orderSn = request.getParameter("param");
+            log.info("支付成功 订单号: " + orderSn);
 
-            // 根据参数名称获取参数值
-            String paramValue = request.getParameter(paramName);
-            log.warn(paramName + " = " + paramValue);
+            // 订单完成 发送邮件 修改订单状态
+            orderService.completeOrder(orderSn);
 
+            return "success";
+
+        }catch (Exception e){
+            e.printStackTrace();
+
+            return "fail";
+        }
+
+
+
+    }
+
+
+    /**
+     * 根据订单号查询订单数据
+     * @param orderSn
+     * @return
+     */
+    @GetMapping("requestOrderByOrderSn/{orderSn}")
+    public R requestOrderByOrderSn(@PathVariable String orderSn){
+
+        try {
+            OrderVo orderVo = orderService.requestOrderByOrderSn(orderSn);
+
+            return R.ok(REnum.USER_REQUEST_ORDER_SUCCESS.getStatusCode(),
+                    REnum.USER_REQUEST_ORDER_SUCCESS.getStatusMsg())
+                    .put("order", orderVo);
+
+        }catch (Exception e){
+
+            e.printStackTrace();
+
+            return R.error(REnum.USER_REQUEST_ORDER_FAIL.getStatusCode(),
+                    REnum.USER_REQUEST_ORDER_FAIL.getStatusMsg());
         }
 
     }

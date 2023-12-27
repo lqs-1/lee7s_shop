@@ -38,4 +38,10 @@ public interface ProductService extends IService<Product> {
     List<Product> requestAvailableProductList(Integer productCategoryId);
 
     void localProductStock(Integer productId, Integer num);
+
+    void recoverProductLockStock(Integer productId, Integer num);
+
+    void deductionStock(Integer productId, Integer goodsNum);
+
+    Boolean hasLockStockProductByProductCategoryId(Integer productCategoryId);
 }
