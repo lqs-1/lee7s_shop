@@ -37,10 +37,10 @@ instance.interceptors.response.use(function (response) {
             return response;
         } else if (response.data.code > 20000) { // 表示后台响应的状态是失败状态
             Message.error(response.data.msg)
-            return;
+            return response;
         } else {
-            Message.info(response.data.msg)
-            return;
+            Message.success("success")
+            return response;
         }
     }
 }, function (error) {
