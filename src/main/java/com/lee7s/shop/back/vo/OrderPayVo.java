@@ -24,5 +24,7 @@ public class OrderPayVo {
 
     private String payMethod; // 支付方式 1微信 2支付宝
 
+    private Integer type; // 产品类型 0 有库存的 1 无库存的
+
 
 }

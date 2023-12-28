@@ -161,7 +161,9 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
     public List<ProductIdAndNameVo> requestProductIdAndNameListByCategoryId(Integer productCategoryId) {
         List<Product> productList = this.baseMapper.selectList(new LambdaQueryWrapper<Product>().eq(Product::getStatus, Constant.ProductStatus.ON.getStatusCode()).eq(Product::getProductCategoryId, productCategoryId));
 
-        List<ProductIdAndNameVo> productIdAndNameVos = productList.stream().map(product -> {
+        List<ProductIdAndNameVo> productIdAndNameVos = productList.stream()
+                .filter(product -> product.getType() == Constant.ProductType.HAS_STOCK.getStatusCode())
+                .map(product -> {
             ProductIdAndNameVo productIdAndNameVo = new ProductIdAndNameVo();
             productIdAndNameVo.setProductId(product.getProductId());
             productIdAndNameVo.setProductName(product.getProductName());
@@ -273,5 +275,18 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
             }
         }
         return hasStock;
+    }
+
+
+    /**
+     * 根据id获取产品
+     * @param productId
+     * @return
+     */
+    @Override
+    public Product requestProductById(Integer productId) {
+
+        return this.baseMapper.selectById(productId);
+
     }
 }

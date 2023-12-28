@@ -44,4 +44,6 @@ public interface ProductService extends IService<Product> {
     void deductionStock(Integer productId, Integer goodsNum);
 
     Boolean hasLockStockProductByProductCategoryId(Integer productCategoryId);
+
+    Product requestProductById(Integer productId);
 }

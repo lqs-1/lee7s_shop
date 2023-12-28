@@ -259,4 +259,28 @@ public class Constant {
         }
     }
 
+    /**
+     * 产品类型
+     */
+    public enum ProductType {
+        HAS_STOCK(0, "有库存产品"),
+        NO_STOCK(1, "无库存产品");
+        private Integer statusCode;
+
+        private String statusMsg;
+
+        ProductType(Integer statusCode, String statusMsg) {
+            this.statusCode = statusCode;
+            this.statusMsg = statusMsg;
+        }
+
+        public Integer getStatusCode() {
+            return statusCode;
+        }
+
+        public String getStatusMsg() {
+            return statusMsg;
+        }
+    }
+
 }

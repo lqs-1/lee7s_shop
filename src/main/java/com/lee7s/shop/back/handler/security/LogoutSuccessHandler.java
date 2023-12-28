@@ -1,11 +1,11 @@
 package com.lee7s.shop.back.handler.security;
 
+import com.aliyun.oss.common.utils.StringUtils;
 import com.lee7s.shop.back.constant.REnum;
 import com.lee7s.shop.back.handler.security.utils.JwtToken;
 import com.lee7s.shop.back.handler.security.utils.ResponseUtils;
 import com.lee7s.shop.back.handler.security.utils.TokenObj;
 import com.lee7s.shop.back.utils.R;
-import com.mysql.jdbc.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.logout.LogoutHandler;

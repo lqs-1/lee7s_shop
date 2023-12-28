@@ -2,13 +2,10 @@ package com.lee7s.shop.back.config;
 
 import com.lee7s.shop.back.config.auto.EmailProperties;
 import com.lee7s.shop.back.constant.Constant;
-import com.lee7s.shop.back.constant.REnum;
 import com.lee7s.shop.back.entity.Goods;
 import com.lee7s.shop.back.entity.Order;
-import com.lee7s.shop.back.utils.R;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
@@ -63,6 +60,7 @@ public class EmailCodeClient {
 
             if (goodsList.size() == 1){
                 context.append("<p>" + goodsList.get(0).getGoodsDetail() + "</p>");
+                context.append("<hr>");
             }else {
                 for (Goods goods : goodsList) {
                     context.append("<p>" + goods.getGoodsDetail() + "</p>");
@@ -84,6 +82,58 @@ public class EmailCodeClient {
                 return;
             }
             sendEmailOrder(email, order, goodsList, reTry + 1);
+        }
+
+    }
+
+
+
+    /**
+     * 发送订单给用户
+     * @param email
+     * @param order
+     * @param goodsDetail
+     * @param reTry
+     */
+    public void sendEmailOrder(String email, Order order, String goodsDetail, Integer reTry){
+        MimeMessage mailMessage = javaMailSender.createMimeMessage();
+        //需要借助Helper类
+        MimeMessageHelper helper=new MimeMessageHelper(mailMessage);
+
+        try {
+            // 邮件标头
+            helper.setFrom(emailProperties.getFormEmailNickName() + "<" + emailProperties.getFormEmail() + ">");
+            // 发给谁
+            helper.setTo(email);
+            // 主题
+            String subject = "感谢您购买: " + order.getProductName();
+            helper.setSubject(subject);
+            // 发送时间设置
+            helper.setSentDate(new Date()); //发送时间
+            // 要发送的文本
+            StringBuffer context = new StringBuffer("<h5>订单号: " + order.getOrderSn() + "</h5>");
+            context.append("您购买的商品如下:<br>");
+            context.append("<hr>");
+
+
+            context.append("<p>" + goodsDetail + "</p>");
+            context.append("<hr>");
+
+            context.append("<p>您也可以复制订单号到 " + Constant.ORDER_QUERY_URL + " 查询");
+
+            // 这个是html格式
+            helper.setText(context.toString(),true);
+            //第一个参数要发送的内容，第二个参数不是Html格式。
+
+            javaMailSender.send(mailMessage);
+
+        }catch (Exception e) {
+            e.printStackTrace();
+
+            if (reTry == 5){
+                return;
+            }
+            sendEmailOrder(email, order, goodsDetail, reTry + 1);
         }
 
     }

@@ -79,6 +79,14 @@ public class Product {
     @TableField("product_lock_stock")
     private Integer productLockStock;
 
+    @ApiModelProperty("产品类型 0 有库存 1 有库存")
+    @TableField("type")
+    private Integer type;
+
+    @ApiModelProperty("无库存产品的具体商品 无库存的商品不用进商品库")
+    @TableField("product_detail")
+    private String productDetail;
+
     // 所属产品分类
     @TableField(exist = false)
     private String productCategoryName;

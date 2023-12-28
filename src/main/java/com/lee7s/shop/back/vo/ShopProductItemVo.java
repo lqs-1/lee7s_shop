@@ -37,4 +37,6 @@ public class ShopProductItemVo {
     private Integer productStock;
 
     private Integer productLockStock;
+
+    private Integer type;
 }

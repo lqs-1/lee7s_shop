@@ -3,15 +3,16 @@ package com.lee7s.shop.back.service.mpl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lee7s.shop.back.config.EmailCodeClient;
 import com.lee7s.shop.back.constant.Constant;
 import com.lee7s.shop.back.entity.Goods;
 import com.lee7s.shop.back.entity.Order;
+import com.lee7s.shop.back.entity.Product;
 import com.lee7s.shop.back.mapper.OrderMapper;
 import com.lee7s.shop.back.mq.publisher.OrderAutoCancelPublisher;
 import com.lee7s.shop.back.service.GoodsService;
 import com.lee7s.shop.back.service.OrderService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lee7s.shop.back.service.ProductService;
 import com.lee7s.shop.back.utils.MessageDigestHexUtil;
 import com.lee7s.shop.back.utils.Pagination.PageUtils;
@@ -99,24 +100,27 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         order.setProductName(orderPayVo.getProductName());
         order.setProductId(orderPayVo.getProductId());
 
-        // 修改商品状态
-        List<Integer> lockGoodsIdList = goodsService.lockGoodsByProductId(orderPayVo.getProductId(), orderPayVo.getGoodsNum());
+        // 判断是否是无库存产品 无库存产品的具体实现不在商品逻辑中 也不需要扣减库存 修改状态
+        if (orderPayVo.getType() == Constant.ProductType.HAS_STOCK.getStatusCode()){
+            // 修改商品状态
+            List<Integer> lockGoodsIdList = goodsService.lockGoodsByProductId(orderPayVo.getProductId(), orderPayVo.getGoodsNum());
 
-        if (lockGoodsIdList.size() == orderPayVo.getGoodsNum()){
-            // 产品锁定库存修改
-            productService.localProductStock(orderPayVo.getProductId(), orderPayVo.getGoodsNum());
+            if (lockGoodsIdList.size() == orderPayVo.getGoodsNum()){
+                // 产品锁定库存修改
+                productService.localProductStock(orderPayVo.getProductId(), orderPayVo.getGoodsNum());
 
-        }
-
-        StringBuffer goodsDetailIds = new StringBuffer();
-        for (Integer goodsId : lockGoodsIdList) {
-            goodsDetailIds.append(goodsId);
-            if (lockGoodsIdList.get(orderPayVo.getGoodsNum() - 1) != goodsId){
-                goodsDetailIds.append(":");
             }
-        }
 
-        order.setGoodsDetailIds(goodsDetailIds.toString());
+            StringBuffer goodsDetailIds = new StringBuffer();
+            for (Integer goodsId : lockGoodsIdList) {
+                goodsDetailIds.append(goodsId);
+                if (lockGoodsIdList.get(orderPayVo.getGoodsNum() - 1) != goodsId){
+                    goodsDetailIds.append(":");
+                }
+            }
+
+            order.setGoodsDetailIds(goodsDetailIds.toString());
+        }
 
         // TODO 发送到延时队列
         // 75.127.13.112
@@ -181,16 +185,22 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         Order originOrder = this.baseMapper.selectById(orderSn);
         // 如果还是锁定状态就走这里 解锁库存 修改状态
         if (originOrder.getOrderStatus() == Constant.OrderStatus.LOCK.getStatusCode()) {
-            // 解除商品的商品状态和上架状态
-            String goodsIds = order.getGoodsDetailIds();
 
-            List<Integer> goodsIdList = getGoodsIdList(goodsIds);
+            // 获取订单产品 并判断产品是否是 无库存产品
+            Product product = productService.requestProductById(order.getProductId());
 
-            goodsService.recoverGoodsStatusByIds(goodsIdList);
+            if (product.getType() == Constant.ProductType.HAS_STOCK.getStatusCode()){
+                // 解除商品的商品状态和上架状态
+                String goodsIds = order.getGoodsDetailIds();
 
-            // 恢复库存 扣除锁定库存
-            Integer goodsNum = order.getGoodsNum();
-            productService.recoverProductLockStock(order.getProductId(), goodsNum);
+                List<Integer> goodsIdList = getGoodsIdList(goodsIds);
+
+                goodsService.recoverGoodsStatusByIds(goodsIdList);
+
+                // 恢复库存 扣除锁定库存
+                Integer goodsNum = order.getGoodsNum();
+                productService.recoverProductLockStock(order.getProductId(), goodsNum);
+            }
 
             // 修改订单状态
             order.setOrderStatus(Constant.OrderStatus.CANCEL.getStatusCode());
@@ -227,23 +237,33 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         // 获取到订单
         Order order = this.baseMapper.selectById(orderSn);
 
-        List<Integer> goodsIdList = getGoodsIdList(order.getGoodsDetailIds());
+        Product product = productService.requestProductById(order.getProductId());
 
-        // 修改商品状态 并下架商品 然后获取商品发送邮件
-        List<Goods> saleGoodsList = goodsService.alterGoodsGoodsStatusToOFF(goodsIdList);
+        // 判断产品是不是无库存产品
+        if (product.getType() == Constant.ProductType.HAS_STOCK.getStatusCode()) {
 
-        // 扣减库存
-        productService.deductionStock(order.getProductId(), order.getGoodsNum());
+            List<Integer> goodsIdList = getGoodsIdList(order.getGoodsDetailIds());
+
+            // 修改商品状态 并下架商品 然后获取商品发送邮件
+            List<Goods> saleGoodsList = goodsService.alterGoodsGoodsStatusToOFF(goodsIdList);
+
+            // 扣减库存
+            productService.deductionStock(order.getProductId(), order.getGoodsNum());
+
+            // 发送邮件 TODO
+            String email = order.getEmail();
+            emailCodeClient.sendEmailOrder(email, order, saleGoodsList, 1);
+        }else {
+            // 如果是没有库存的产品 不用去商品中获取具体商品 产品中自带商品
+            String productDetail = product.getProductDetail();
+            String email = order.getEmail();
+            emailCodeClient.sendEmailOrder(email, order, productDetail, 1);
+
+        }
 
         // 修改订单状态
         order.setOrderStatus(Constant.OrderStatus.FINISH.getStatusCode());
         this.baseMapper.updateById(order);
-
-        // 发送邮件 TODO
-        String email = order.getEmail();
-        emailCodeClient.sendEmailOrder(email, order, saleGoodsList, 1);
-
-
     }
 
     /**
@@ -261,12 +281,27 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             BeanUtils.copyProperties(order, orderVo);
             if (order.getOrderStatus() == Constant.OrderStatus.FINISH.getStatusCode()){
 
-                // 根据商品id们查询具体商品
-                List<Goods> goodsList = goodsService.requestGoodsListByIds(getGoodsIdList(order.getGoodsDetailIds()));
+                // 判断订单产品是否是无库存类型的产品
+                Product product = productService.requestProductById(order.getProductId());
 
-                List<String> goodsDetailList = goodsList.stream().map(goods -> goods.getGoodsDetail()).collect(Collectors.toList());
+                if (product.getType() == Constant.ProductType.HAS_STOCK.getStatusCode()){
+                    // 根据商品id们查询具体商品
+                    List<Goods> goodsList = goodsService.requestGoodsListByIds(getGoodsIdList(order.getGoodsDetailIds()));
 
-                orderVo.setGoodsDetailList(goodsDetailList);
+                    List<String> goodsDetailList = goodsList.stream().map(goods -> goods.getGoodsDetail()).collect(Collectors.toList());
+
+                    orderVo.setGoodsDetailList(goodsDetailList);
+                }else {
+                    // 如果产品是没有库存类型的产品 那么直接返回
+                    String productDetail = product.getProductDetail();
+
+                    List<String> goodsDetailList = new ArrayList<>();
+
+                    goodsDetailList.add(productDetail);
+
+                    orderVo.setGoodsDetailList(goodsDetailList);
+                }
+
 
                 return orderVo;
 
