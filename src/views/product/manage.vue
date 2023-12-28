@@ -46,6 +46,21 @@
               </el-select>
             </el-form-item>
 
+             <el-form-item label="产品类型" prop="type">
+              <el-select v-model="productForm.type" placeholder="请选择发货方式">
+                <el-option
+                    v-for="item in productTypes"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value">
+                </el-option>
+              </el-select>
+            </el-form-item>
+
+            <el-form-item label="无库存商品" prop="type" v-if="productForm.type == 1">
+             <el-input type="textarea" v-model="productForm.productDetail"></el-input>
+            </el-form-item>
+
             <el-form-item label="注意事项:分割" prop="productDesc">
               <el-input type="text" v-model="productForm.productDesc"></el-input>
             </el-form-item>
@@ -118,6 +133,20 @@
               </el-select>
             </el-form-item>
 
+            <el-form-item label="产品类型" prop="type">
+              <el-select v-model="productForm.type" placeholder="请选择发货方式">
+                <el-option
+                    v-for="item in productTypes"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value">
+                </el-option>
+              </el-select>
+            </el-form-item>
+
+            <el-form-item label="无库存商品" prop="type" v-if="productForm.type == 1">
+             <el-input type="textarea" v-model="productForm.productDetail"></el-input>
+            </el-form-item>
             <el-form-item label="注意事项:分割" prop="productDesc">
               <el-input type="text" v-model="productForm.productDesc"></el-input>
             </el-form-item>
@@ -300,7 +329,7 @@
           align="center">
         <template slot-scope="scope">
           <div slot="reference" class="name-wrapper">
-            <el-tag size="">{{ scope.row.productStock }}</el-tag>
+            <el-tag size="">{{ scope.row.type == 0? scope.row.productStock: "无限" }}</el-tag>
           </div>
         </template>
       </el-table-column>
@@ -363,12 +392,20 @@ export default {
         value: 1,
         label: '手动'
       }],
+      productTypes:[{
+        value: 0,
+        label: '有库存产品'
+      }, {
+        value: 1,
+        label: '无库存产品'
+      }],
       productEditVisible: false,
       productList: [],
 
       productName: "",
 
       singleUploadUrl: "https://nobibibi.top/back/web-file-generate/single",
+      // singleUploadUrl: "http://localhost:8888/back/web-file-generate/single",
 
       header: {
         token: localStorage.getItem("token")

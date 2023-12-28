@@ -198,6 +198,8 @@ export default {
       productCategoryName: "",
 
       singleUploadUrl: "https://nobibibi.top/back/web-file-generate/single",
+      // singleUploadUrl: "http://localhost:8888/back/web-file-generate/single",
+
 
       header: {
         token: localStorage.getItem("token")
