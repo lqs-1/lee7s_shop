@@ -31,4 +31,6 @@ public interface OrderService extends IService<Order> {
     void completeOrder(String orderSn);
 
     OrderVo requestOrderByOrderSn(String orderSn);
+
+    Integer statisticsOrderByStatus(Integer statusCode);
 }

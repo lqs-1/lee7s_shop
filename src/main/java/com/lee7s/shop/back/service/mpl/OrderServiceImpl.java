@@ -278,4 +278,17 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     }
 
 
+    /**
+     * 统计指定状态的订单个数
+     * @param statusCode
+     * @return
+     */
+    @Override
+    public Integer statisticsOrderByStatus(Integer statusCode) {
+
+        return this.baseMapper.selectCount(new LambdaQueryWrapper<Order>().eq(Order::getOrderStatus, statusCode));
+
+    }
+
+
 }

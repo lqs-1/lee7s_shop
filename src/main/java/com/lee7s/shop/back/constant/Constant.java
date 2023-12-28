@@ -74,11 +74,11 @@ public class Constant {
     // 延时队列-订单取消执行routeKey
     public static final String ORDER_CANCEL_INVOKE_QUEUE_ROUTE_KEY = "order-cancel-invoke-queue-key";
     // 延时时间 这个时间用于自动取消订单
-    public static final Integer ORDER_CANCEL_TIME_DELAY_QUEUE_TTL = 60000;
+    public static final Integer ORDER_CANCEL_TIME_DELAY_QUEUE_TTL = 360000;
     // 订单查询网址
-    public static final String ORDER_QUERY_URL = "https://nobibibi.top/#/order";
+    public static final String ORDER_QUERY_URL = "https://shop.somg.xyz/#/order";
     // 订单创建失败返回地址
-    public static final String ORDER_CREATE_FAIL_RETURN_URL = "localhost:9090";
+    public static final String ORDER_CREATE_FAIL_RETURN_URL = "https://shop.somg.xyz";
 
 
 

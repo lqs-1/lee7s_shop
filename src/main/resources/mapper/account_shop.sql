@@ -11,10 +11,10 @@
  Target Server Version : 80200 (8.2.0)
  File Encoding         : 65001
 
- Date: 27/12/2023 21:40:43
+ Date: 28/12/2023 14:32:47
 */
 
-SET NAMES utf8;
+SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
 
 -- ----------------------------
@@ -24,7 +24,7 @@ DROP TABLE IF EXISTS `goods`;
 CREATE TABLE `goods`  (
   `goods_id` int NOT NULL AUTO_INCREMENT COMMENT '具体商品的id',
   `product_id` int NOT NULL COMMENT '所属产品id',
-  `goods_detail` longtext CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '具体商品的详情 因为是账号所以这里就是账号信息',
+  `goods_detail` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '具体商品的详情 因为是账号所以这里就是账号信息',
   `create_time` datetime NOT NULL COMMENT '创建时间',
   `update_time` datetime NOT NULL COMMENT '更新时间',
   `is_delete` int NOT NULL COMMENT '商品是否删除 0 未删除 1 已删除',
@@ -33,7 +33,7 @@ CREATE TABLE `goods`  (
   PRIMARY KEY (`goods_id`) USING BTREE,
   INDEX `prods`(`product_id` ASC) USING BTREE,
   CONSTRAINT `prods` FOREIGN KEY (`product_id`) REFERENCES `product` (`product_id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 55 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 55 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of goods
@@ -48,19 +48,19 @@ INSERT INTO `goods` VALUES (54, 9, '微软给海关法的实施', '2023-12-26 17
 -- ----------------------------
 DROP TABLE IF EXISTS `order`;
 CREATE TABLE `order`  (
-  `order_sn` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '订单编号',
+  `order_sn` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '订单编号',
   `product_id` int NOT NULL COMMENT '购买产品的id',
-  `product_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '购买产品的名字',
+  `product_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '购买产品的名字',
   `goods_price` int NOT NULL COMMENT '商品单价',
   `order_total_price` int NOT NULL COMMENT '订单总价',
-  `email` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '客户邮箱',
-  `goods_detail_ids` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '具体商品的id 可多个 用于解库存 : 分割',
+  `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '客户邮箱',
+  `goods_detail_ids` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '具体商品的id 可多个 用于解库存 : 分割',
   `order_status` int NOT NULL COMMENT '订单状态 0 库存已经锁定 1 已完成 2 已取消',
   `create_time` datetime NOT NULL COMMENT '创建时间',
   `update_time` datetime NOT NULL COMMENT '更新时间',
   `goods_num` int NOT NULL COMMENT '商品数量',
   PRIMARY KEY (`order_sn`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of order
@@ -73,14 +73,14 @@ DROP TABLE IF EXISTS `product`;
 CREATE TABLE `product`  (
   `product_id` int NOT NULL AUTO_INCREMENT COMMENT '产品id',
   `product_category_id` int NOT NULL COMMENT '产品分类id',
-  `product_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '产品名称',
+  `product_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '产品名称',
   `product_price` int NOT NULL COMMENT '产品价格',
-  `product_logo` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '产品logo',
+  `product_logo` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '产品logo',
   `create_time` datetime NOT NULL COMMENT '创建时间',
   `update_time` datetime NOT NULL COMMENT '更新时间',
   `is_delete` int NOT NULL COMMENT '产品是否删除 0 未删除 1 已删除',
-  `product_desc` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '产品注意事项 用:隔开',
-  `product_warn` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '产品警告 用:隔开',
+  `product_desc` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '产品注意事项 用:隔开',
+  `product_warn` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '产品警告 用:隔开',
   `product_stock` int NOT NULL COMMENT '产品库存',
   `product_lock_stock` int NOT NULL COMMENT '产品锁定库存',
   `product_method` int NOT NULL COMMENT '发货方式 0 自动 1 手动',
@@ -88,7 +88,7 @@ CREATE TABLE `product`  (
   PRIMARY KEY (`product_id`) USING BTREE,
   INDEX `category_id`(`product_category_id` ASC) USING BTREE,
   CONSTRAINT `category_id` FOREIGN KEY (`product_category_id`) REFERENCES `product_category` (`product_category_id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 10 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 10 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of product
@@ -102,14 +102,14 @@ INSERT INTO `product` VALUES (9, 28, 'Telegram协议号', 20, 'public/2023-12-26
 DROP TABLE IF EXISTS `product_category`;
 CREATE TABLE `product_category`  (
   `product_category_id` int NOT NULL AUTO_INCREMENT COMMENT '产品分类id',
-  `product_category_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '产品分类名称',
-  `product_category_logo` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '产品分类logo',
+  `product_category_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '产品分类名称',
+  `product_category_logo` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '产品分类logo',
   `create_time` datetime NOT NULL COMMENT '创建时间',
   `update_time` datetime NOT NULL COMMENT '更新时间',
   `is_delete` int NOT NULL COMMENT '产品分类是否删除 0 未删除 1 已删除',
   `status` int NOT NULL COMMENT '上架状态 0 上架 1 下架',
   PRIMARY KEY (`product_category_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 32 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 32 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of product_category

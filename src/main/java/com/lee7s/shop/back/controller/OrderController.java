@@ -17,6 +17,7 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -172,6 +173,11 @@ public class OrderController {
 
         try {
             OrderVo orderVo = orderService.requestOrderByOrderSn(orderSn);
+
+            if (ObjectUtils.isEmpty(orderVo)){
+                return R.error(REnum.USER_REQUEST_ORDER_FAIL.getStatusCode(),
+                        REnum.USER_REQUEST_ORDER_FAIL.getStatusMsg());
+            }
 
             return R.ok(REnum.USER_REQUEST_ORDER_SUCCESS.getStatusCode(),
                     REnum.USER_REQUEST_ORDER_SUCCESS.getStatusMsg())
