@@ -5,6 +5,7 @@
     <!--产品添加-->
     <el-dialog
         title="产品添加"
+        :fullscreen="true"
         :visible="productAddVisible"
         width="60%"
         :before-close="addHandleClose">
@@ -76,6 +77,7 @@
 
     <!--  产品修改-->
     <el-dialog
+        :fullscreen="true"
         title="产品信息修改"
         :visible="productEditVisible"
         width="60%"

@@ -5,6 +5,7 @@
     <!--产品添加-->
     <el-dialog
         title="商品添加"
+        :fullscreen="true"
         :visible="goodsAddVisible"
         width="60%"
         :before-close="addHandleClose">
@@ -48,6 +49,7 @@
     <!--  产品修改-->
     <el-dialog
         title="产品信息修改"
+        :fullscreen="true"
         :visible="goodsEditVisible"
         width="60%"
         :before-close="editHandleClose">
@@ -132,7 +134,7 @@
       </el-table-column>
 
       <el-table-column
-          label="所属餐品"
+          label="所属产品"
           width="200"
           align="center">
         <template slot-scope="scope">

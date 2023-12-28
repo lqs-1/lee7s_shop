@@ -5,6 +5,7 @@
     <!--产品分类添加-->
     <el-dialog
         title="产品分类添加"
+        :fullscreen="true"
         :visible="productCategoryAddVisible"
         width="30%"
         :before-close="addHandleClose">
@@ -41,6 +42,7 @@
 
     <!--  产品分类修改-->
     <el-dialog
+        :fullscreen="true"
         title="产品分类信息修改"
         :visible="productCategoryEditVisible"
         width="30%"
