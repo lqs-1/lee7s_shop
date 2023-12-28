@@ -2,7 +2,8 @@
   <div>
 
     <el-dialog
-        title="订单详情"
+        :fullscreen="true"
+        title="创建订单"
         :visible="goodsVisible"
         width="85%"
         :before-close="addHandleClose">

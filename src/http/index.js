@@ -28,9 +28,21 @@ instance.interceptors.request.use(function (config) {
 
 // 添加相应拦截器，可以在这里做请求成功或者失败的提示
 instance.interceptors.response.use(function (response) {
-    // 对响应的数据做些什么, response就是整个响应
     // 表示请求是成功的
-    return response;
+    if (response.status && response.status == 200) {
+
+        // 表示后台响应的状态也是成功状态 上面是特殊处理的 这里是一般处理
+        if (response.data.code == 0 || (response.data.code >= 10000 && response.data.code < 20000) || response.data.code == 1000) {
+            Message.success(response.data.msg)
+            return response;
+        } else if (response.data.code > 20000) { // 表示后台响应的状态是失败状态
+            Message.error(response.data.msg)
+            return;
+        } else {
+            Message.info(response.data.msg)
+            return;
+        }
+    }
 }, function (error) {
     // 对响应错误做些什么,服务器内部的错误才会触发比如，404,403,500等等
     Message.error("请求错误 请重试")

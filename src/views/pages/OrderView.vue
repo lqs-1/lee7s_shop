@@ -101,9 +101,10 @@ export default {
         },
 
         getOrder() {
-            this.tvList = {}
-            if (this.searchKey == null) {
+            let orderSn = this.searchKey.trim()
+            if (orderSn == null || orderSn == "") {
                 this.$message.info("请输入订单号")
+                this.searchKey = ""
             } else {
                 this.isResponse = true
                 this.httpRequest.get("/back/order/requestOrderByOrderSn/" + this.searchKey)
