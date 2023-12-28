@@ -38,12 +38,12 @@
               <el-input :readonly="true" type="text" v-model="orderForm.goodsPrice"></el-input>
             </el-form-item>
 
-            <el-form-item label="产品数量" prop="goodsNum">
+            <el-form-item label="产品数量" prop="goodsNum" v-if="orderForm.type == 0">
               <el-input @input="goodsTotalPrice()" :placeholder="'库存' + orderForm.productStock" type="text"
                         v-model="orderForm.goodsNum"></el-input>
             </el-form-item>
 
-            <el-form-item label="总价" prop="orderTotalPrice">
+            <el-form-item label="总价" prop="orderTotalPrice" v-if="orderForm.type == 0">
               <el-input :readonly="true" placeholder="输入数量自动生成" type="text"
                         v-model="orderForm.orderTotalPrice"></el-input>
             </el-form-item>
@@ -118,7 +118,7 @@
               prop="stock">
             <template slot-scope="scope">
               <div slot="reference" class="name-wrapper">
-                <el-tag size="medium">{{ scope.row.productStock }}</el-tag>
+                <el-tag size="medium">{{ scope.row.type == 0? scope.row.productStock:"无限" }}</el-tag>
               </div>
             </template>
           </el-table-column>
@@ -216,6 +216,7 @@ export default {
       this.orderForm.productId = row.productId
       this.orderForm.productName = row.productName
       this.orderForm.goodsPrice = row.productPrice
+      this.orderForm.type = row.type
 
 
       this.orderForm.productStock = row.productStock
@@ -273,6 +274,18 @@ export default {
 
     // 提交订单
     orderCommit() {
+
+
+      if (this.orderForm.type == 1){
+        this.orderForm.goodsNum = 1
+        this.orderForm.orderTotalPrice = this.orderForm.goodsPrice
+      }
+
+
+      console.log(this.orderForm)
+
+
+
       this.$refs.orderForm.validate((valid) => {
         if (valid) {
           this.subMitOrderLoading = true
