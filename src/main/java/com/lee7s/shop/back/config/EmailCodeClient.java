@@ -138,6 +138,95 @@ public class EmailCodeClient {
 
     }
 
+    /**
+     * 手动发货的产品 订单支付之后 给客服发送邮件 提醒发货
+     * @param order
+     */
+    public void manualProductSendToAssistant( Order order, Integer reTry) {
+
+        MimeMessage mailMessage = javaMailSender.createMimeMessage();
+        //需要借助Helper类
+        MimeMessageHelper helper=new MimeMessageHelper(mailMessage);
+
+        try {
+            // 邮件标头
+            helper.setFrom(emailProperties.getFormEmailNickName() + "<" + emailProperties.getFormEmail() + ">");
+            // 发给谁
+            helper.setTo(Constant.MANUAL_ASSISTANT_MAIL_ADDRESS);
+            // 主题
+            String subject = "客户购买: " + order.getProductName();
+            helper.setSubject(subject);
+            // 发送时间设置
+            helper.setSentDate(new Date()); //发送时间
+            // 要发送的文本
+            StringBuffer context = new StringBuffer("<h5>订单号: " + order.getOrderSn() + "</h5>");
+            context.append("客户邮箱: " + order.getEmail() + "<br>");
+
+            // 这个是html格式
+            helper.setText(context.toString(),true);
+            //第一个参数要发送的内容，第二个参数不是Html格式。
+
+            javaMailSender.send(mailMessage);
+
+        }catch (Exception e) {
+            e.printStackTrace();
+
+            if (reTry == 5){
+                return;
+            }
+            manualProductSendToAssistant(order, reTry + 1);
+        }
+
+    }
+
+
+    /**
+     * 手动发货的产品 订单支付后 发送邮件给客户 提醒联系客服或者等待客服的邮件
+     * @param order
+     */
+    public void manualProductSendToCustom(Order order, Integer reTry) {
+        MimeMessage mailMessage = javaMailSender.createMimeMessage();
+        //需要借助Helper类
+        MimeMessageHelper helper=new MimeMessageHelper(mailMessage);
+
+        try {
+            // 邮件标头
+            helper.setFrom(emailProperties.getFormEmailNickName() + "<" + emailProperties.getFormEmail() + ">");
+            // 发给谁
+            helper.setTo(order.getEmail());
+            // 主题
+            String subject = "感谢您购买: " + order.getProductName();
+            helper.setSubject(subject);
+            // 发送时间设置
+            helper.setSentDate(new Date()); //发送时间
+            // 要发送的文本
+            StringBuffer context = new StringBuffer("<h5>订单号: " + order.getOrderSn() + "</h5>");
+            context.append("您购买的是手动发货商品<br>");
+            context.append("<hr>");
+
+            context.append("<p>请等待客服稍后会主动通过邮箱发送给你</p>");
+            context.append("<hr>");
+
+            context.append("<h5>或者通过以下方式催促客服</h5>");
+            context.append("<p>Telegram: " + Constant.MANUAL_ASSISTANT_TELEGRAM_ADDRESS + "</p>");
+            context.append("<p>客服邮箱: " + Constant.MANUAL_ASSISTANT_GMAIL_ADDRESS + "</p>");
+
+            // 这个是html格式
+            helper.setText(context.toString(),true);
+            //第一个参数要发送的内容，第二个参数不是Html格式。
+
+            javaMailSender.send(mailMessage);
+
+        }catch (Exception e) {
+            e.printStackTrace();
+
+            if (reTry == 5){
+                return;
+            }
+            manualProductSendToCustom(order, reTry + 1);
+        }
+    }
+
 
     /**
      * 传递一个标志位

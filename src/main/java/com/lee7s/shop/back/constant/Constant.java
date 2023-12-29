@@ -79,6 +79,12 @@ public class Constant {
     public static final String ORDER_QUERY_URL = "https://shop.somg.xyz/#/order";
     // 订单创建失败返回地址
     public static final String ORDER_CREATE_FAIL_RETURN_URL = "https://shop.somg.xyz";
+    // 手动发货产品 发送给下面指定的客服邮箱 提醒发货
+    public static final String MANUAL_ASSISTANT_MAIL_ADDRESS = "749062870@qq.com";
+    // 手动发货产品 发送给客户邮箱的客服Telegram联系方式
+    public static final String MANUAL_ASSISTANT_TELEGRAM_ADDRESS = "https://t.me/shnajkzl";
+    // 手动发货产品 发送给客户邮箱的客服GMAIL联系方式
+    public static final String MANUAL_ASSISTANT_GMAIL_ADDRESS = "liqisong2002@gmail.com";
 
 
 

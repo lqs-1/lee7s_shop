@@ -60,6 +60,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
 
     /**
      * 构造订单 alipay
+     *
      * @param orderPayVo
      * @return
      */
@@ -80,6 +81,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
 
     /**
      * 构造订单 V免签支付
+     *
      * @param orderPayVo
      * @return
      */
@@ -101,11 +103,11 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         order.setProductId(orderPayVo.getProductId());
 
         // 判断是否是无库存产品 无库存产品的具体实现不在商品逻辑中 也不需要扣减库存 修改状态
-        if (orderPayVo.getType() == Constant.ProductType.HAS_STOCK.getStatusCode()){
+        if (orderPayVo.getType() == Constant.ProductType.HAS_STOCK.getStatusCode()) {
             // 修改商品状态
             List<Integer> lockGoodsIdList = goodsService.lockGoodsByProductId(orderPayVo.getProductId(), orderPayVo.getGoodsNum());
 
-            if (lockGoodsIdList.size() == orderPayVo.getGoodsNum()){
+            if (lockGoodsIdList.size() == orderPayVo.getGoodsNum()) {
                 // 产品锁定库存修改
                 productService.localProductStock(orderPayVo.getProductId(), orderPayVo.getGoodsNum());
 
@@ -114,7 +116,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             StringBuffer goodsDetailIds = new StringBuffer();
             for (Integer goodsId : lockGoodsIdList) {
                 goodsDetailIds.append(goodsId);
-                if (lockGoodsIdList.get(orderPayVo.getGoodsNum() - 1) != goodsId){
+                if (lockGoodsIdList.get(orderPayVo.getGoodsNum() - 1) != goodsId) {
                     goodsDetailIds.append(":");
                 }
             }
@@ -130,12 +132,11 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         this.baseMapper.insert(order);
 
 
-
         // 填充支付对象
         VPayVo vPayVo = new VPayVo();
         vPayVo.setOut_trade_no(orderSn);
         vPayVo.setPayMethod(orderPayVo.getPayMethod());
-        vPayVo.setTotal_amount(String.valueOf(orderPayVo .getOrderTotalPrice()));
+        vPayVo.setTotal_amount(String.valueOf(orderPayVo.getOrderTotalPrice()));
         vPayVo.setParam(orderSn);
         vPayVo.setSign(MessageDigestHexUtil.doDigest(
                 vPayVo.getOut_trade_no() +
@@ -155,6 +156,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
 
     /**
      * 获取订单分页数据
+     *
      * @param param
      * @return
      */
@@ -163,21 +165,22 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
 
         LambdaQueryWrapper<Order> queryWrapper = new LambdaQueryWrapper<Order>();
 
-        if (!ObjectUtils.isEmpty(param.get("status"))){
+        if (!ObjectUtils.isEmpty(param.get("status"))) {
             queryWrapper.eq(Order::getOrderStatus, Integer.parseInt((String) param.get("status")));
         }
 
         IPage<Order> page = this.page(new QueryPage<Order>().getPage(param, true), queryWrapper);
 
-        return new  PageUtils(page);
+        return new PageUtils(page);
 
     }
 
     /**
      * 自动取消订单 超时未支付
+     *
      * @param order
      */
-    @Transactional(readOnly = false, rollbackFor = Exception.class )
+    @Transactional(readOnly = false, rollbackFor = Exception.class)
     @Override
     public void orderAutoCancel(Order order) {
 
@@ -189,7 +192,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             // 获取订单产品 并判断产品是否是 无库存产品
             Product product = productService.requestProductById(order.getProductId());
 
-            if (product.getType() == Constant.ProductType.HAS_STOCK.getStatusCode()){
+            if (product.getType() == Constant.ProductType.HAS_STOCK.getStatusCode()) {
                 // 解除商品的商品状态和上架状态
                 String goodsIds = order.getGoodsDetailIds();
 
@@ -214,6 +217,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
 
     /**
      * 根据订单商品id字符串 处理成字符串列表
+     *
      * @param goodsIds
      * @return
      */
@@ -228,6 +232,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
 
     /**
      * 订单完成 发送邮件 修改订单状态
+     *
      * @param orderSn
      */
     @Transactional(readOnly = false, rollbackFor = Exception.class)
@@ -238,6 +243,8 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         Order order = this.baseMapper.selectById(orderSn);
 
         Product product = productService.requestProductById(order.getProductId());
+
+        // 规定有库存的都是自动发货 没有库存的可以设置为手动发货
 
         // 判断产品是不是无库存产品
         if (product.getType() == Constant.ProductType.HAS_STOCK.getStatusCode()) {
@@ -253,11 +260,20 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             // 发送邮件 TODO
             String email = order.getEmail();
             emailCodeClient.sendEmailOrder(email, order, saleGoodsList, 1);
-        }else {
-            // 如果是没有库存的产品 不用去商品中获取具体商品 产品中自带商品
-            String productDetail = product.getProductDetail();
-            String email = order.getEmail();
-            emailCodeClient.sendEmailOrder(email, order, productDetail, 1);
+        } else {
+            // 如果是没有库存且是手动发货
+            if (product.getProductMethod() == Constant.ProductMethod.MANUAL.getStatusCode()) {
+                // 发邮件给客服
+                emailCodeClient.manualProductSendToAssistant(order, 1);
+                // 发邮件给客户
+                emailCodeClient.manualProductSendToCustom(order, 1);
+            } else {
+                // 如果是没有库存的产品且自动发货 不用去商品中获取具体商品 产品中自带商品
+                String productDetail = product.getProductDetail();
+                String email = order.getEmail();
+                emailCodeClient.sendEmailOrder(email, order, productDetail, 1);
+            }
+
 
         }
 
@@ -268,6 +284,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
 
     /**
      * 根据订单号查询订单
+     *
      * @param orderSn
      * @return
      */
@@ -276,22 +293,22 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
 
         Order order = this.baseMapper.selectById(orderSn);
 
-        if (!ObjectUtils.isEmpty(order)){
+        if (!ObjectUtils.isEmpty(order)) {
             OrderVo orderVo = new OrderVo();
             BeanUtils.copyProperties(order, orderVo);
-            if (order.getOrderStatus() == Constant.OrderStatus.FINISH.getStatusCode()){
+            if (order.getOrderStatus() == Constant.OrderStatus.FINISH.getStatusCode()) {
 
                 // 判断订单产品是否是无库存类型的产品
                 Product product = productService.requestProductById(order.getProductId());
 
-                if (product.getType() == Constant.ProductType.HAS_STOCK.getStatusCode()){
+                if (product.getType() == Constant.ProductType.HAS_STOCK.getStatusCode()) {
                     // 根据商品id们查询具体商品
                     List<Goods> goodsList = goodsService.requestGoodsListByIds(getGoodsIdList(order.getGoodsDetailIds()));
 
                     List<String> goodsDetailList = goodsList.stream().map(goods -> goods.getGoodsDetail()).collect(Collectors.toList());
 
                     orderVo.setGoodsDetailList(goodsDetailList);
-                }else {
+                } else {
                     // 如果产品是没有库存类型的产品 那么直接返回
                     String productDetail = product.getProductDetail();
 
@@ -315,6 +332,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
 
     /**
      * 统计指定状态的订单个数
+     *
      * @param statusCode
      * @return
      */
