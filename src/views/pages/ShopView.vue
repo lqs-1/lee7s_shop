@@ -1,6 +1,31 @@
 <template>
   <div>
 
+    <b-dialog v-model="dialogVisible"
+              :canCancel="false"
+              :width="505">
+        <center>
+          <h3>小店购买需要注意以下几点</h3>
+        </center>
+        <el-divider></el-divider>
+
+        <center>
+          <ul>
+            <li style="color: #bf30ac">支付金额需和支付二维码上一致</li>
+            <li style="color: #ff7700">邮箱填写一定要正确 邮箱用于接受卡密</li>
+            <li style="color: #0f9d58">手动发货的商品 购买后客服会邮箱发货</li>
+            <li style="color: #A0522D">没收到邮件可通过<a style="color: aqua" href="https://t.me/shnajkzl" target="_blank">Telegram</a>联系客服</li>
+            <li style="color: #CD9B1D">没收到邮件可通过<a style="color: aqua" href="mailto:liqisong200@gmail.com" target="_blank">邮箱</a>联系客服</li>
+            <li style="color: red">小店没退款功能 商品出问题可联系客服退换</li>
+            <li style="color: 	#8B2500">邮箱填写一定要正确 邮箱用于接受卡密</li>
+          </ul>
+        </center>
+
+        <el-divider></el-divider>
+        <center><p style="color: red;">小店力推Telegram福利频道<a style="color: aqua" href="https://t.me/av_share_channel" target="_blank">闲人AV频道</a></p></center>
+    </b-dialog>
+
+
     <el-dialog
         :fullscreen="true"
         title="创建订单"
@@ -83,6 +108,7 @@
             class="header-icon el-icon-info"></i>
         </template>
         <el-table
+            :show-header="isMobile"
             :data="item.shopProductItemVoList"
             style="width: 100%"
             align="center"
@@ -94,7 +120,7 @@
               prop="goodsName">
             <template slot-scope="scope">
               <div slot="reference" class="name-wrapper">
-                <el-tag size="medium" type="info">{{ scope.row.productName }}</el-tag>
+                <el-tag size="medium">{{ scope.row.productName }}</el-tag>
               </div>
             </template>
           </el-table-column>
@@ -161,6 +187,7 @@ export default {
   name: "ShopView",
   data() {
     return {
+      dialogVisible: true,
       subMitOrderLoading: false,
       isMobile: true,    //默认为pc端
       orderForm: {},
@@ -180,6 +207,14 @@ export default {
   },
 
   mounted() {
+
+    // this.$nextTick(() => {
+    //   this.$buefy.dialog.alert({
+    //     title: '注意事项',
+    //     message: 'This is a Buefy dialog!',
+    //     type: 'is-info',
+    //   });
+    // });
   },
 
   created() {

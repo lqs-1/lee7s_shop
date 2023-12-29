@@ -1,11 +1,17 @@
 import Vue from 'vue'
 import router from './router'
 
+// 引入buefy
+import Buefy from 'buefy';
+import 'buefy/dist/buefy.css';
+Vue.use(Buefy);
+
 
 // 引入ElementUi
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 Vue.use(ElementUI);
+
 
 Vue.config.productionTip = false
 

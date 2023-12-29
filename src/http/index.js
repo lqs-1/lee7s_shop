@@ -33,7 +33,7 @@ instance.interceptors.response.use(function (response) {
 
         // 表示后台响应的状态也是成功状态 上面是特殊处理的 这里是一般处理
         if (response.data.code == 0 || (response.data.code >= 10000 && response.data.code < 20000) || response.data.code == 1000) {
-            Message.success(response.data.msg)
+            // Message.success(response.data.msg)
             return response;
         } else if (response.data.code > 20000) { // 表示后台响应的状态是失败状态
             Message.error(response.data.msg)

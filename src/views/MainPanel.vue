@@ -53,7 +53,7 @@ export default {
 
     selectMenu(index) {
       if (index === '/help') {
-        document.location.href = "https://t.me/lee7s_7s"
+        document.location.href = "https://t.me/shnajkzl"
       } else {
         this.$router.push(index)
       }
