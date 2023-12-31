@@ -79,6 +79,7 @@
 
 
     <el-input v-model="productCategoryName" placeholder="请输入分类" @input="queryByName" class="queryProductCategory"></el-input>
+<!--    <vs-input color="success" placeholder="请输入分类" @input="queryByName" v-model="productCategoryName"/>-->
     <el-divider></el-divider>
 
     <el-table
