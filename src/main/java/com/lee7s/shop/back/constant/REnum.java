@@ -90,6 +90,18 @@ public enum REnum {
     SHOP_MALL_PAGE_GOODS_REQUEST_FAIL(21043, "获取首页商品失败"),
     REQUEST_STATISTICS_ORDER_SUCCESS(11044, "获取订单统计成功"),
     REQUEST_STATISTICS_ORDER_FAIL(21044, "获取订单统计失败"),
+    PARENT_DICT_USED(21045, "字典已存在"),
+    DICT_DELETE_SUCCESS(11046, "字典删除成功"),
+    DICT_DELETE_FAIL(21046, "字典删除失败"),
+    SELECT_DICT_LIST_SUCCESS(11047, "获取字典列表成功"),
+    SELECT_DICT_LIST_FAIL(21047, "获取字典列表失败"),
+    ADD_SYS_DICT_SUCCESS(11048, "添加字典成功"),
+    ADD_SYS_DICT_FAIL(21048, "添加字典失败"),
+    ALTER_DICT_SUCCESS(11049, "修改字典成功"),
+    ALTER_DICT_FAIL(21049, "修改字典失败"),
+    GET_ALL_PARENT_DICT_SUCCESS(11050, "获取所有根字典成功"),
+    GET_ALL_PARENT_DICT_FAIL(21050, "获取所有根字典失败"),
+
 
 
 
