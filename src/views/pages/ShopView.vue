@@ -4,25 +4,30 @@
     <b-dialog v-model="dialogVisible"
               :canCancel="false"
               :width="505">
-        <center>
-          <h3>小店购买需要注意以下几点</h3>
-        </center>
-        <el-divider></el-divider>
+      <center>
+        <h3>小店购买需要注意以下几点</h3>
+      </center>
+      <el-divider></el-divider>
 
-        <center>
-          <ul>
-            <li style="color: #bf30ac">支付金额需和支付二维码上一致</li>
-            <li style="color: #ff7700">邮箱填写一定要正确 邮箱用于接受卡密</li>
-            <li style="color: #0f9d58">手动发货的商品 购买后客服会邮箱发货</li>
-            <li style="color: #A0522D">没收到邮件可通过<a style="color: aqua" href="https://t.me/shnajkzl" target="_blank">Telegram</a>联系客服</li>
-            <li style="color: #CD9B1D">没收到邮件可通过<a style="color: aqua" href="mailto:liqisong200@gmail.com" target="_blank">邮箱</a>联系客服</li>
-            <li style="color: red">小店没退款功能 商品出问题可联系客服退换</li>
-            <li style="color: 	#8B2500">邮箱填写一定要正确 邮箱用于接受卡密</li>
-          </ul>
-        </center>
+      <center>
+        <ul>
+          <li style="color: #bf30ac">支付金额需和支付二维码上一致</li>
+          <li style="color: #ff7700">邮箱填写一定要正确 邮箱用于接受卡密</li>
+          <li style="color: #0f9d58">手动发货的商品 购买后客服会邮箱发货</li>
+          <li style="color: #A0522D">没收到邮件可通过<a style="color: aqua" href="https://t.me/shnajkzl"
+                                                        target="_blank">Telegram</a>联系客服
+          </li>
+          <li style="color: #CD9B1D">没收到邮件可通过<a style="color: aqua" href="mailto:liqisong200@gmail.com"
+                                                        target="_blank">邮箱</a>联系客服
+          </li>
+          <li style="color: red">小店没退款功能 商品出问题可联系客服退换</li>
+          <li style="color: 	#8B2500">邮箱填写一定要正确 邮箱用于接受卡密</li>
+        </ul>
+      </center>
 
-        <el-divider></el-divider>
-        <center><p style="color: red;">小店力推Telegram福利频道<a style="color: aqua" href="https://t.me/av_share_channel" target="_blank">闲人AV频道</a></p></center>
+      <el-divider></el-divider>
+      <center><p style="color: red;">小店力推Telegram福利频道<a style="color: aqua" href="https://t.me/av_share_channel"
+                                                                target="_blank">闲人AV频道</a></p></center>
     </b-dialog>
 
 
@@ -42,7 +47,7 @@
       </el-alert>
       <br>
 
-<!--      <el-divider></el-divider>-->
+      <!--      <el-divider></el-divider>-->
 
 
       <el-alert :closable="false"
@@ -52,7 +57,7 @@
                 type="error">
       </el-alert>
       <br>
-<!--      <el-divider></el-divider>-->
+      <!--      <el-divider></el-divider>-->
       <span>
           <el-form ref="orderForm" :model="orderForm" label-width="80px" :rules="rules">
             <el-form-item label="产品名" prop="productName">
@@ -78,11 +83,22 @@
                         v-model="orderForm.email"></el-input>
             </el-form-item>
 
-             <el-form-item label="支付方式" prop="payMethod">
+<!--             <el-form-item label="支付方式" prop="payMethod">-->
+<!--                <el-select v-model="orderForm.payMethod" placeholder="请选择支付方式">-->
+<!--                 <el-option-->
+<!--                     v-for="item in payMethods"-->
+<!--                     :key="item.value"-->
+<!--                     :label="item.label"-->
+<!--                     :value="item.value">-->
+<!--                  </el-option>-->
+<!--                </el-select>-->
+<!--            </el-form-item>-->
+
+             <el-form-item label="支付方式" prop="payType">
 <!--              <el-input type="text" >-->
-                <el-select v-model="orderForm.payMethod" placeholder="请选择支付方式">
+                <el-select v-model="orderForm.payType" placeholder="请选择支付方式">
                  <el-option
-                     v-for="item in payMethods"
+                     v-for="item in payTypes"
                      :key="item.value"
                      :label="item.label"
                      :value="item.value">
@@ -104,7 +120,8 @@
     <el-collapse accordion>
       <el-collapse-item v-for="item in goodsInformationDataList" :key="item.productCategoryId" style="margin-top: 10px">
         <template slot="title">
-          <img style="width: 20px; height: 20px;" :src="item.productCategoryLogo"> &nbsp;&nbsp; {{ item.productCategoryName }}<i
+          <img style="width: 20px; height: 20px;" :src="item.productCategoryLogo"> &nbsp;&nbsp;
+          {{ item.productCategoryName }}<i
             class="header-icon el-icon-info"></i>
         </template>
         <el-table
@@ -144,7 +161,7 @@
               prop="stock">
             <template slot-scope="scope">
               <div slot="reference" class="name-wrapper">
-                <el-tag size="medium">{{ scope.row.type == 0? scope.row.productStock:"无限" }}</el-tag>
+                <el-tag size="medium">{{ scope.row.type == 0 ? scope.row.productStock : "无限" }}</el-tag>
               </div>
             </template>
           </el-table-column>
@@ -191,10 +208,22 @@ export default {
       subMitOrderLoading: false,
       isMobile: true,    //默认为pc端
       orderForm: {},
-      payMethods: [{
-        value: '2',
-        label: '支付宝'
-      }],
+      payMethods: [
+        {
+          value: '2',
+          label: 'Alipay'
+        },
+      ],
+      payTypes: [
+        {
+          value: "alipay",
+          label: "AliPay-支付宝"
+        },
+        {
+          value: "usdt",
+          label: "USDT-TRC"
+        }
+      ],
       goodsVisible: false,
       rules: {
         num: [{required: true, message: '数量必须填写', trigger: "blur"}],
@@ -233,7 +262,7 @@ export default {
   methods: {
 
     // 获取商品列表
-    requestShopGoodsInformation(){
+    requestShopGoodsInformation() {
       this.httpRequest.get("/shop/goods/requestShopGoodsInformation")
           .then((response) => {
             console.log(response)
@@ -242,8 +271,6 @@ export default {
         this.$message.error("未知错误")
       })
     },
-
-
 
 
     // 购买详情页
@@ -272,7 +299,7 @@ export default {
     // 总价计算
     goodsTotalPrice() {
 
-      if (isNaN(parseInt(this.orderForm.goodsNum))){
+      if (isNaN(parseInt(this.orderForm.goodsNum))) {
         this.orderForm.goodsNum = null
         this.orderForm.orderTotalPrice = null
         this.$message.error("数量必须数字")
@@ -311,14 +338,13 @@ export default {
     orderCommit() {
 
 
-      if (this.orderForm.type == 1){
+      if (this.orderForm.type == 1) {
         this.orderForm.goodsNum = 1
         this.orderForm.orderTotalPrice = this.orderForm.goodsPrice
       }
 
 
       console.log(this.orderForm)
-
 
 
       this.$refs.orderForm.validate((valid) => {
