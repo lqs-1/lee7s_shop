@@ -17,10 +17,7 @@ import com.lee7s.shop.back.service.ProductService;
 import com.lee7s.shop.back.utils.MessageDigestHexUtil;
 import com.lee7s.shop.back.utils.Pagination.PageUtils;
 import com.lee7s.shop.back.utils.Pagination.QueryPage;
-import com.lee7s.shop.back.vo.OrderPayVo;
-import com.lee7s.shop.back.vo.OrderVo;
-import com.lee7s.shop.back.vo.PayVo;
-import com.lee7s.shop.back.vo.VPayVo;
+import com.lee7s.shop.back.vo.*;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -343,5 +340,89 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
 
     }
 
+    /**
+     * 构造订单 易支付支付
+     *
+     * @param orderPayVo
+     * @param ipAddress
+     * @param device
+     * @return
+     */
+    @Transactional(readOnly = false, rollbackFor = Exception.class)
+    @Override
+    public EPayVo constructOrderPayDataEPay(OrderPayVo orderPayVo, String ipAddress, String device) {
+
+        String orderSn = IdWorker.get32UUID();
+
+        // 填充订单信息
+        Order order = new Order();
+        order.setOrderSn(orderSn);
+        order.setOrderStatus(Constant.OrderStatus.LOCK.getStatusCode());
+        order.setOrderTotalPrice(orderPayVo.getOrderTotalPrice());
+        order.setGoodsPrice(orderPayVo.getGoodsPrice());
+        order.setEmail(orderPayVo.getEmail());
+        order.setGoodsNum(orderPayVo.getGoodsNum());
+        order.setProductName(orderPayVo.getProductName());
+        order.setProductId(orderPayVo.getProductId());
+
+        // 判断是否是无库存产品 无库存产品的具体实现不在商品逻辑中 也不需要扣减库存 修改状态
+        if (orderPayVo.getType() == Constant.ProductType.HAS_STOCK.getStatusCode()) {
+            // 修改商品状态
+            List<Integer> lockGoodsIdList = goodsService.lockGoodsByProductId(orderPayVo.getProductId(), orderPayVo.getGoodsNum());
+
+            if (lockGoodsIdList.size() == orderPayVo.getGoodsNum()) {
+                // 产品锁定库存修改
+                productService.localProductStock(orderPayVo.getProductId(), orderPayVo.getGoodsNum());
+
+            }
+
+            StringBuffer goodsDetailIds = new StringBuffer();
+            for (Integer goodsId : lockGoodsIdList) {
+                goodsDetailIds.append(goodsId);
+                if (lockGoodsIdList.get(orderPayVo.getGoodsNum() - 1) != goodsId) {
+                    goodsDetailIds.append(":");
+                }
+            }
+
+            order.setGoodsDetailIds(goodsDetailIds.toString());
+        }
+
+        // TODO 发送到延时队列
+        // 75.127.13.112
+        orderAutoCancelPublisher.sendOrderCancelTimeDelayMessage(order);
+
+        // 保存订单
+        this.baseMapper.insert(order);
+
+
+        // 填充支付对象
+        EPayVo ePayVo = new EPayVo();
+        ePayVo.setName(orderPayVo.getProductName());
+        ePayVo.setType(orderPayVo.getPayType());
+        ePayVo.setOut_trade_no(orderSn);
+        ePayVo.setReturnUrl(Constant.RETURN_URL);
+        ePayVo.setNotifyUrl(Constant.NOTIFY_URL);
+        ePayVo.setP_id(Constant.EASY_PID);
+        ePayVo.setSign_type(Constant.EASY_SIGN_TYPE);
+        ePayVo.setClientip(ipAddress);
+        ePayVo.setDevice(device);
+        ePayVo.setParam(orderSn);
+        ePayVo.setMoney(String.valueOf(orderPayVo.getOrderTotalPrice()));
+
+        ePayVo.setSign(MessageDigestHexUtil.doDigest(
+                "clientip=" + ePayVo.getClientip() +
+                        "&device=" + device +
+                        "&money=" + ePayVo.getMoney() +
+                        "&name=" + ePayVo.getName() +
+                        "&notify_url=" + ePayVo.getNotifyUrl() +
+                        "&out_trade_no=" + ePayVo.getOut_trade_no() +
+                        "&param=" + ePayVo.getParam() +
+                        "&pid=" + ePayVo.getP_id() +
+                        "&return_url=" + ePayVo.getReturnUrl() +
+                        "&type=" + ePayVo.getType() + Constant.EASY_KEY
+        ).getStrCode());
+        return ePayVo;
+
+    }
 
 }

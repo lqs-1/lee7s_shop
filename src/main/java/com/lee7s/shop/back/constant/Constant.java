@@ -48,18 +48,27 @@ public class Constant {
 
     // v免签地址
     public static final String VPayHOST = "https://shop.nobibibi.top/";
-
     // v免签创建订单接口
     public static final String VPayINTERFACE = "createOrder";
 
     // v免签支付页面
     public static final String VPayPAGE = "https://shop.nobibibi.top/payPage/pay.html?orderId=";
+    // 易支付地址
+    public static final String EASY_PAY_HOST = "https://epay.nobibibi.top/";
+    // 易支付创建订单接口
+    public static final String EASY_PAY_INTERFACE = "mapi.php";
+    // 易支付商户id
+    public static final String EASY_PID = "1001";
+    // 易支付签名类型
+    public static final String EASY_SIGN_TYPE = "MD5";
+    // 易支付商户密钥
+    public static final String EASY_KEY = "LxL1Il9NL9L5hxBXhtI3N57N1Nv9I71x";
 
     // 支付通知地址notifyUrl
     public static final String NOTIFY_URL = "http://nobibibi.top/back/order/notify";
 
     // 支付通知地址returnUrl
-    public static final String RETURN_URL = "https://shop.somg.xyz";
+    public static final String RETURN_URL = "https://nobibibi.top/back/order/return";
 
 
 
@@ -73,8 +82,8 @@ public class Constant {
     public static final String ORDER_CANCEL_INVOKE_QUEUE = "order-cancel-invoke-queue";
     // 延时队列-订单取消执行routeKey
     public static final String ORDER_CANCEL_INVOKE_QUEUE_ROUTE_KEY = "order-cancel-invoke-queue-key";
-    // 延时时间 这个时间用于自动取消订单
-    public static final Integer ORDER_CANCEL_TIME_DELAY_QUEUE_TTL = 360000;
+    // 延时时间 这个时间用于自动取消订单 10分钟
+    public static final Integer ORDER_CANCEL_TIME_DELAY_QUEUE_TTL = 600000;
     // 订单查询网址
     public static final String ORDER_QUERY_URL = "https://shop.somg.xyz/#/order";
     // 订单创建失败返回地址

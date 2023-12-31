@@ -22,7 +22,9 @@ public class OrderPayVo {
 
     private Integer orderTotalPrice; // 订单总额
 
-    private String payMethod; // 支付方式 1微信 2支付宝
+    private String payMethod; // 支付方式 1微信 2支付宝 这是v免签
+
+    private String payType; // 支付方式 alipay usdt 这是易支付
 
     private Integer type; // 产品类型 0 有库存的 1 无库存的
 

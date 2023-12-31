@@ -76,6 +76,7 @@ public class SecurityConfigurerAdapter extends WebSecurityConfigurerAdapter {
                         "/shop/**",
                         "/back/order/pay",
                         "/back/order/notify",
+                        "/back/order/return",
                         "/back/order/requestOrderByOrderSn/**",
                         "/",
                         "/favicon.ico",
