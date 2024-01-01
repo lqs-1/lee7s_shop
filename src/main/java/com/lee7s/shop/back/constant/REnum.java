@@ -101,6 +101,8 @@ public enum REnum {
     ALTER_DICT_FAIL(21049, "修改字典失败"),
     GET_ALL_PARENT_DICT_SUCCESS(11050, "获取所有根字典成功"),
     GET_ALL_PARENT_DICT_FAIL(21050, "获取所有根字典失败"),
+    SELECT_DICT_SUCCESS(11047, "获取字典成功"),
+    SELECT_DICT_FAIL(21047, "获取字典失败"),
 
 
 

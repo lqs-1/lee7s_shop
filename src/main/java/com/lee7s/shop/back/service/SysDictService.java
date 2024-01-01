@@ -24,4 +24,8 @@ public interface SysDictService extends IService<SysDict> {
     R deleteDict(Long dictId);
 
     SysDict findDictByParentAndSelfCode(String parentDictCode, String sonDictCode);
+
+    Map<String, String> findDictByParentCode(String parentCode);
+
+    SysDict findDictBySonCode(String dictCode);
 }

@@ -45,6 +45,61 @@ public class SysDictController {
         }
     }
 
+    /**
+     * 获取字典 根据根字典获取整个子字典列表
+     * @param parentCode
+     * @return
+     */
+    @GetMapping("requestDictByParent/{parentCode}")
+    public R requestDictByParent(@PathVariable String parentCode){
+        try {
+            Map<String, String> parentDictAllSonDict = sysDictService.findDictByParentCode(parentCode);
+
+            return R.ok(REnum.SELECT_DICT_SUCCESS.getStatusCode(),
+                    REnum.SELECT_DICT_SUCCESS.getStatusMsg()).put("parentDictAllSonDict", parentDictAllSonDict);
+        }catch (Exception e){
+            e.printStackTrace();
+            return R.error(REnum.SELECT_DICT_FAIL.getStatusCode(), REnum.SELECT_DICT_FAIL.getStatusMsg());
+        }
+    }
+
+
+    /**
+     * 获取字典 字典编码获取 用于获取具体子字典
+     * @param dictCode
+     * @return
+     */
+    @GetMapping("requestDictByCode/{dictCode}")
+    public R requestDictByCode(@PathVariable String dictCode){
+        try {
+            SysDict sysDict = sysDictService.findDictBySonCode(dictCode);
+
+            return R.ok(REnum.SELECT_DICT_SUCCESS.getStatusCode(),
+                    REnum.SELECT_DICT_SUCCESS.getStatusMsg()).put("sysDict", sysDict);
+        }catch (Exception e){
+            e.printStackTrace();
+            return R.error(REnum.SELECT_DICT_FAIL.getStatusCode(), REnum.SELECT_DICT_FAIL.getStatusMsg());
+        }
+    }
+
+    /**
+     * 获取字典 字典编码获取 根据根字典编码和子字典编码查询字典
+     * @param parentCode
+     * @param sonCode
+     * @return
+     */
+    @GetMapping("requestDictByParentAndSonCode/{parentCode}/{sonCode}")
+    public R requestDictByParentAndSonCode(@PathVariable String parentCode, @PathVariable String sonCode){
+        try {
+            SysDict sysDict = sysDictService.findDictByParentAndSelfCode(parentCode, sonCode);
+
+            return R.ok(REnum.SELECT_DICT_SUCCESS.getStatusCode(),
+                    REnum.SELECT_DICT_SUCCESS.getStatusMsg()).put("sysDict", sysDict);
+        }catch (Exception e){
+            e.printStackTrace();
+            return R.error(REnum.SELECT_DICT_FAIL.getStatusCode(), REnum.SELECT_DICT_FAIL.getStatusMsg());
+        }
+    }
 
 
 

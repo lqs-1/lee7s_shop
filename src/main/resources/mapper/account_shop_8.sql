@@ -11,7 +11,7 @@
  Target Server Version : 80200 (8.2.0)
  File Encoding         : 65001
 
- Date: 29/12/2023 21:59:39
+ Date: 01/01/2024 18:43:02
 */
 
 SET NAMES utf8mb4;
@@ -142,5 +142,34 @@ INSERT INTO `product_category` VALUES (30, 'AppliId', 'public/2023-12-26/a58d2ef
 INSERT INTO `product_category` VALUES (31, 'TIktok账号', 'public/2023-12-26/cc64af97181346a5b4bfb9493dbee1fa.png', '2023-12-26 14:41:23', '2023-12-27 20:15:33', 0, 0);
 INSERT INTO `product_category` VALUES (32, '科学上网', 'public/2023-12-28/d4013d14142a490295c40f599c3fa63d.png', '2023-12-28 19:56:09', '2023-12-28 19:57:36', 0, 0);
 INSERT INTO `product_category` VALUES (33, '无库存分类', 'public/2023-12-28/cbd20b4614d840bb8192fa58e667edea.png', '2023-12-28 21:07:59', '2023-12-28 21:08:13', 0, 0);
+
+-- ----------------------------
+-- Table structure for sys_dict
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_dict`;
+CREATE TABLE `sys_dict`  (
+  `id` int NOT NULL AUTO_INCREMENT COMMENT '字典id',
+  `dict_code` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '字典编码',
+  `parent_id` int NULL DEFAULT NULL COMMENT '父字典id',
+  `dict_desc` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '字典描述',
+  `dict_value` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '字典值',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 109 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '系统字典表' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Records of sys_dict
+-- ----------------------------
+INSERT INTO `sys_dict` VALUES (97, 'account_shop_dict', NULL, '账号商城字典', NULL);
+INSERT INTO `sys_dict` VALUES (98, 'huaxianren_telegram', 97, '客服tg', 'https://t.me/lee7s_7s');
+INSERT INTO `sys_dict` VALUES (99, 'huaxianren_email', 97, '客服邮箱', 'liqisong2002@gmail.com');
+INSERT INTO `sys_dict` VALUES (100, 'huaxianren_recommend_channel_url', 97, '推荐频道链接', 'https://t.me/av_share_channel');
+INSERT INTO `sys_dict` VALUES (101, 'huaxianren_recommend_channel_name', 97, '推荐频道名字', '闲人AV频道');
+INSERT INTO `sys_dict` VALUES (102, 'telegram_copy_dict', NULL, 'telegram群消息复制字典', NULL);
+INSERT INTO `sys_dict` VALUES (103, 'order_ids', 102, '可听命的账号id', '5060527090:6833588245');
+INSERT INTO `sys_dict` VALUES (104, 'resource_account', 102, '被复制的群或者频道', 'JPYPorn');
+INSERT INTO `sys_dict` VALUES (105, 'target_account', 102, '被复制到的目标账号', 'huaxianrenshare');
+INSERT INTO `sys_dict` VALUES (106, 'redis_index_key_word', 102, 'redis中存放的消息起始id的key名字', 'min_id');
+INSERT INTO `sys_dict` VALUES (107, 'contact', 102, '客服账号', 'https://t.me/shnajkzl');
+INSERT INTO `sys_dict` VALUES (108, 'account_shop_url', 102, '商店地址', 'https://shop.somg.xyz');
 
 SET FOREIGN_KEY_CHECKS = 1;

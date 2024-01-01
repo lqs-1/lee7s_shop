@@ -1,5 +1,6 @@
 package com.lee7s.shop.back.service.mpl;
 
+import com.aliyun.oss.common.utils.StringUtils;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
@@ -13,7 +14,6 @@ import com.lee7s.shop.back.utils.Pagination.PageUtils;
 import com.lee7s.shop.back.utils.Pagination.QueryPage;
 import com.lee7s.shop.back.utils.R;
 import com.lee7s.shop.back.vo.AddSysDictVo;
-import com.mysql.cj.util.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -151,5 +151,34 @@ public class SysDictServiceImpl extends ServiceImpl<SysDictMapper, SysDict> impl
             return dict.get(0);
         }
         return null;
+    }
+
+    /**
+     * 根据根字典的编码获取所有的子字典
+     * @param parentCode
+     * @return
+     */
+    @Override
+    public Map<String, String> findDictByParentCode(String parentCode) {
+        SysDict parentDict = this.baseMapper.selectOne(new LambdaQueryWrapper<SysDict>().eq(SysDict::getDictCode, parentCode));
+        if (ObjectUtils.isEmpty(parentDict)){
+            return null;
+        }
+
+        Map<String, String> result = this.baseMapper.selectList(new LambdaQueryWrapper<SysDict>().eq(SysDict::getParentId, parentDict.getId()))
+                .stream().collect(Collectors.toMap(SysDict::getDictCode, SysDict::getDictValue));
+
+        return result;
+
+    }
+
+    /**
+     * 根据字典编码获取字典
+     * @param dictCode
+     * @return
+     */
+    @Override
+    public SysDict findDictBySonCode(String dictCode) {
+        return this.baseMapper.selectOne(new LambdaQueryWrapper<SysDict>().eq(SysDict::getDictCode, dictCode));
     }
 }

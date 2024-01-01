@@ -2,7 +2,6 @@ package com.lee7s.shop.back.controller;
 
 import com.lee7s.shop.back.constant.REnum;
 import com.lee7s.shop.back.entity.Goods;
-import com.lee7s.shop.back.entity.ProductCategory;
 import com.lee7s.shop.back.service.GoodsService;
 import com.lee7s.shop.back.utils.Pagination.PageUtils;
 import com.lee7s.shop.back.utils.R;
