@@ -117,6 +117,17 @@ export default {
           ],
           menuIndex : 4
         },
+        {
+          menuName: "系统",
+          menuPath: 'sys',
+          menuItems: [
+            {
+              menuPath: '/sys/sysDict',
+              menuName: "系统字典"
+            },
+          ],
+          menuIndex : 5
+        },
       ],
       activeIndex: '/index',
       currentIndex: '/index',

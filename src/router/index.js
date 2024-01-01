@@ -10,6 +10,7 @@ import order_manage from "@/views/order/manage"
 import product_manage from "@/views/product/manage"
 import productCategory_manage from "@/views/productCategory/manage"
 import goods_manage from "@/views/goods/manage"
+import sysDictList from "@/views/sys/SysDictList.vue";
 
 // 自己定义的请求包。只能在组件中使用，如果非要在这里使用，必须引入
 
@@ -79,6 +80,15 @@ const routes = [
                     isLogin: true
                 },
                 component: order_manage
+            },
+
+            {
+                path: '/sys/sysDict',
+                name: 'order',
+                meta: {
+                    isLogin: true
+                },
+                component: sysDictList
             },
         ]
     },
