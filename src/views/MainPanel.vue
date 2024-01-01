@@ -30,6 +30,7 @@ export default {
   name: "MainPlane",
   data() {
     return {
+      sysDict:{},
       activeIndex: '/shop',
     }
   },
@@ -41,6 +42,7 @@ export default {
   },
 
   mounted() {
+    this.requestAccountShopDict()
     this.activeIndex = this.$route.path
     if (this.activeIndex == '/'){
       this.activeIndex = "/shop"
@@ -50,10 +52,21 @@ export default {
 
   methods: {
 
+    // 获取商城字典
+    requestAccountShopDict(){
+      this.httpRequest.get("/back/sysDict/requestDictByParent/account_shop_dict")
+          .then((response) => {
+            console.log(response)
+            this.sysDict = response.data.parentDictAllSonDict
+          }).catch((error) => {
+        this.$message.error("未知错误")
+      })
+    },
+
 
     selectMenu(index) {
       if (index === '/help') {
-        document.location.href = "https://t.me/shnajkzl"
+        document.location.href = this.sysDict.huaxianren_telegram
       } else {
         this.$router.push(index)
       }

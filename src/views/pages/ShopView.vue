@@ -14,10 +14,10 @@
           <li style="color: #bf30ac">支付金额需和支付二维码上一致</li>
           <li style="color: #ff7700">邮箱填写一定要正确 邮箱用于接受卡密</li>
           <li style="color: #0f9d58">手动发货的商品 购买后客服会邮箱发货</li>
-          <li style="color: #A0522D">没收到邮件可通过<a style="color: aqua" href="https://t.me/shnajkzl"
+          <li style="color: #A0522D">没收到邮件可通过<a style="color: aqua" :href="sysDict.huaxianren_telegram"
                                                         target="_blank">Telegram</a>联系客服
           </li>
-          <li style="color: #CD9B1D">没收到邮件可通过<a style="color: aqua" href="mailto:liqisong200@gmail.com"
+          <li style="color: #CD9B1D">没收到邮件可通过<a style="color: aqua" :href="'mailto:' + sysDict.huaxianren_email"
                                                         target="_blank">邮箱</a>联系客服
           </li>
           <li style="color: red">小店没退款功能 商品出问题可联系客服退换</li>
@@ -26,8 +26,8 @@
       </center>
 
       <el-divider></el-divider>
-      <center><p style="color: red;">小店力推Telegram福利频道<a style="color: aqua" href="https://t.me/av_share_channel"
-                                                                target="_blank">闲人AV频道</a></p></center>
+      <center><p style="color: red;">小店力推Telegram福利频道<a style="color: aqua" :href="sysDict.huaxianren_recommend_channel_url"
+                                                                target="_blank">{{ sysDict.huaxianren_recommend_channel_name }}</a></p></center>
     </b-dialog>
 
 
@@ -204,6 +204,7 @@ export default {
   name: "ShopView",
   data() {
     return {
+      sysDict:{},
       dialogVisible: true,
       subMitOrderLoading: false,
       isMobile: true,    //默认为pc端
@@ -237,6 +238,8 @@ export default {
 
   mounted() {
 
+    this.requestAccountShopDict()
+
     // this.$nextTick(() => {
     //   this.$buefy.dialog.alert({
     //     title: '注意事项',
@@ -260,6 +263,17 @@ export default {
   },
 
   methods: {
+
+    // 获取商城字典
+    requestAccountShopDict(){
+      this.httpRequest.get("/back/sysDict/requestDictByParent/account_shop_dict")
+          .then((response) => {
+            console.log(response)
+            this.sysDict = response.data.parentDictAllSonDict
+          }).catch((error) => {
+        this.$message.error("未知错误")
+      })
+    },
 
     // 获取商品列表
     requestShopGoodsInformation() {
