@@ -12,9 +12,10 @@
     "buefy": "^0.9.25",
     "core-js": "^3.8.3",
     "element-ui": "^2.15.9",
+    "ionicons": "^7.2.2",
     "vue": "^2.6.14",
-    "vue-router": "^3.5.1",
-    "vuesax": "^3.12.2"
+    "vue-ionicons": "^3.0.5",
+    "vue-router": "^3.5.1"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",

@@ -6,11 +6,10 @@ import Buefy from 'buefy';
 import 'buefy/dist/buefy.css';
 Vue.use(Buefy);
 
-import Vuesax from 'vuesax'
-
-import 'vuesax/dist/vuesax.css' //Vuesax styles
-Vue.use(Vuesax)
-
+// 引入ionicons
+// import Ionicons from 'vue-ionicons'
+import 'vue-ionicons/ionicons.css'
+// Vue.use(Ionicons);
 
 // 引入ElementUi
 import ElementUI from 'element-ui'
