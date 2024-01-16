@@ -2,7 +2,7 @@
   <div class="product_category_list">
     <el-button type="primary" icon="el-icon-circle-plus" circle class="addGoods"
                @click="showGoodsAddForm"></el-button>
-    <!--产品添加-->
+    <!--商品添加-->
     <el-dialog
         title="商品添加"
         :fullscreen="true"
@@ -48,7 +48,7 @@
 
     <!--  产品修改-->
     <el-dialog
-        title="产品信息修改"
+        title="商品信息修改"
         :fullscreen="true"
         :visible="goodsEditVisible"
         width="60%"
@@ -77,12 +77,12 @@
                 </el-option>
               </el-select>
             </el-form-item>
-"
-"            <el-form-item label="商品详情" prop="goodsDetail">
+
+            <el-form-item label="商品详情" prop="goodsDetail">
               <el-input type="textarea" v-model="goodsForm.goodsDetail"></el-input>
             </el-form-item>
-"
-"          </el-form>
+
+          </el-form>
       </span>
 
       <span slot="footer" class="dialog-footer">
@@ -419,6 +419,7 @@ export default {
     handleEdit(index, data) {
       // console.log(data)
       this.goodsForm = data
+      console.log(data)
       this.requestProductIdAndNameList()
       this.goodsEditVisible = true
 
