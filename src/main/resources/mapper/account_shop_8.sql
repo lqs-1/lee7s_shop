@@ -11,7 +11,7 @@
  Target Server Version : 80200 (8.2.0)
  File Encoding         : 65001
 
- Date: 01/01/2024 18:43:02
+ Date: 20/01/2024 21:35:23
 */
 
 SET NAMES utf8mb4;
@@ -154,22 +154,28 @@ CREATE TABLE `sys_dict`  (
   `dict_desc` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '字典描述',
   `dict_value` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '字典值',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 109 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '系统字典表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 115 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '系统字典表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of sys_dict
 -- ----------------------------
 INSERT INTO `sys_dict` VALUES (97, 'account_shop_dict', NULL, '账号商城字典', NULL);
-INSERT INTO `sys_dict` VALUES (98, 'huaxianren_telegram', 97, '客服tg', 'https://t.me/lee7s_7s');
+INSERT INTO `sys_dict` VALUES (98, 'huaxianren_telegram', 97, '客服tg', 'https://t.me/shnajkzl');
 INSERT INTO `sys_dict` VALUES (99, 'huaxianren_email', 97, '客服邮箱', 'liqisong2002@gmail.com');
-INSERT INTO `sys_dict` VALUES (100, 'huaxianren_recommend_channel_url', 97, '推荐频道链接', 'https://t.me/av_share_channel');
-INSERT INTO `sys_dict` VALUES (101, 'huaxianren_recommend_channel_name', 97, '推荐频道名字', '闲人AV频道');
+INSERT INTO `sys_dict` VALUES (100, 'huaxianren_recommend_channel_url', 97, '推荐频道链接', 'https://t.me/huaxianrennews');
+INSERT INTO `sys_dict` VALUES (101, 'huaxianren_recommend_channel_name', 97, '推荐频道名字', '闲人新闻');
 INSERT INTO `sys_dict` VALUES (102, 'telegram_copy_dict', NULL, 'telegram群消息复制字典', NULL);
-INSERT INTO `sys_dict` VALUES (103, 'order_ids', 102, '可听命的账号id', '5060527090:6833588245');
-INSERT INTO `sys_dict` VALUES (104, 'resource_account', 102, '被复制的群或者频道', 'JPYPorn');
-INSERT INTO `sys_dict` VALUES (105, 'target_account', 102, '被复制到的目标账号', 'huaxianrenshare');
+INSERT INTO `sys_dict` VALUES (103, 'order_ids', 102, '可听命的账号id', '5060527090:6349971145');
+INSERT INTO `sys_dict` VALUES (104, 'resource_account', 102, '被复制的群或者频道', 'JPYPorn ');
+INSERT INTO `sys_dict` VALUES (105, 'target_account', 102, '被复制到的目标账号', 'huaxianrenlee7s');
 INSERT INTO `sys_dict` VALUES (106, 'redis_index_key_word', 102, 'redis中存放的消息起始id的key名字', 'min_id');
 INSERT INTO `sys_dict` VALUES (107, 'contact', 102, '客服账号', 'https://t.me/shnajkzl');
 INSERT INTO `sys_dict` VALUES (108, 'account_shop_url', 102, '商店地址', 'https://shop.somg.xyz');
+INSERT INTO `sys_dict` VALUES (109, 'other_channel', 102, '其他频道展示消息名字_链接逗号分隔', '撸管圣地_https://t.me/huaxianrenlee7s,闲人美图_https://t.me/huaxianrenmeitu,闲人里番_https://t.me/huaxianrenlifan,闲人新闻_https://t.me/huaxianrennews,闲人商店_https://t.me/huaxianrenshare');
+INSERT INTO `sys_dict` VALUES (110, 'main_channel', 102, '主频道人数最多的名字:链接', '闲人av频道:av_share_channel');
+INSERT INTO `sys_dict` VALUES (111, 'resource_account_news', 102, '新闻更新源群组或者频道', 'xhqcankao');
+INSERT INTO `sys_dict` VALUES (112, 'target_account_news', 102, '新闻更新目标群组或者频道', 'huaxianrennews');
+INSERT INTO `sys_dict` VALUES (113, 'alipay_enable', 97, '支付宝支付是否可用 1 为不可用 0为可用', '1');
+INSERT INTO `sys_dict` VALUES (114, 'usdt_enable', 97, 'usdt支付是否可用 1 不可用 0 可用', '0');
 
 SET FOREIGN_KEY_CHECKS = 1;
