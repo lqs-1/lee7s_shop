@@ -100,8 +100,9 @@
                  <el-option
                      v-for="item in payTypes"
                      :key="item.value"
-                     :label="item.label"
-                     :value="item.value">
+                     :label="item.value == 'alipay'? sysDict.alipay_enable == 0? item.label: item.label + '-维护中': sysDict.usdt_enable == 0? item.label: item.label + '-维护中'"
+                     :value="item.value"
+                     :disabled="item.value == 'alipay'? sysDict.alipay_enable == 0? false: true: sysDict.usdt_enable == 0? false: true">
                   </el-option>
                 </el-select>
                <!--              </el-input>-->
@@ -218,11 +219,11 @@ export default {
       payTypes: [
         {
           value: "alipay",
-          label: "AliPay-支付宝"
+          label: "AliPay-支付宝",
         },
         {
           value: "usdt",
-          label: "USDT-TRC"
+          label: "USDT-TRC",
         }
       ],
       goodsVisible: false,
