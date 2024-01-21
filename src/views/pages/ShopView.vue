@@ -64,11 +64,11 @@
               <el-input :readonly="true" type="text" v-model="orderForm.productName"></el-input>
             </el-form-item>
 
-            <el-form-item label="产品单价" prop="goodsPrice">
+            <el-form-item label="产品单价" prop="goodsPrice" v-if="orderForm.goodsPrice > 0">
               <el-input :readonly="true" type="text" v-model="orderForm.goodsPrice"></el-input>
             </el-form-item>
 
-            <el-form-item label="产品数量" prop="goodsNum" v-if="orderForm.type == 0">
+            <el-form-item label="产品数量" prop="goodsNum" v-if="orderForm.goodsPrice > 0 && orderForm.type == 0">
               <el-input @input="goodsTotalPrice()" :placeholder="'库存' + orderForm.productStock" type="text"
                         v-model="orderForm.goodsNum"></el-input>
             </el-form-item>
@@ -94,7 +94,7 @@
 <!--                </el-select>-->
 <!--            </el-form-item>-->
 
-             <el-form-item label="支付方式" prop="payType">
+             <el-form-item label="支付方式" prop="payType" v-if="orderForm.goodsPrice > 0">
 <!--              <el-input type="text" >-->
                 <el-select v-model="orderForm.payType" placeholder="请选择支付方式">
                  <el-option
