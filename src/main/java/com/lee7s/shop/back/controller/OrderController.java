@@ -149,52 +149,61 @@ public class OrderController {
     public String orderPay(@RequestBody OrderPayVo orderPayVo, HttpServletRequest request) throws Exception {
 
         try {
-            // 获取请求ip设备类型
-            String ipAddress = request.getHeader("X-Forwarded-For");
-            String device = "pc";
 
-            if (ipAddress == null || ipAddress.isEmpty() || "unknown".equalsIgnoreCase(ipAddress)) {
-                ipAddress = request.getHeader("Proxy-Client-IP");
-            }
-            if (ipAddress == null || ipAddress.isEmpty() || "unknown".equalsIgnoreCase(ipAddress)) {
-                ipAddress = request.getHeader("WL-Proxy-Client-IP");
-            }
-            if (ipAddress == null || ipAddress.isEmpty() || "unknown".equalsIgnoreCase(ipAddress)) {
-                ipAddress = request.getRemoteAddr();
-            }
+            // 赠品订单
+            if (orderPayVo.getGoodsPrice() < 0){
 
-            // 如果是多级代理，获取第一个IP地址
-            if (ipAddress != null && ipAddress.contains(",")) {
-                ipAddress = ipAddress.split(",")[0].trim();
-            }
-            System.out.println(ipAddress);
+                orderService.constructFreeOrder(orderPayVo);
 
-            // 获取设备类型
-            String userAgent = request.getHeader("User-Agent");
-            // 判断设备类型
-            if (userAgent != null && !userAgent.isEmpty()) {
-                if (userAgent.toLowerCase().contains("mobile") || userAgent.toLowerCase().contains("android") || userAgent.toLowerCase().contains("iphone") || userAgent.toLowerCase().contains("ipad")) {
-                    // 移动设备
-                    device = "mobile";
+            }else {
+                // 付费订单
+                // 获取请求ip设备类型
+                String ipAddress = request.getHeader("X-Forwarded-For");
+                String device = "pc";
+
+                if (ipAddress == null || ipAddress.isEmpty() || "unknown".equalsIgnoreCase(ipAddress)) {
+                    ipAddress = request.getHeader("Proxy-Client-IP");
                 }
-            }
+                if (ipAddress == null || ipAddress.isEmpty() || "unknown".equalsIgnoreCase(ipAddress)) {
+                    ipAddress = request.getHeader("WL-Proxy-Client-IP");
+                }
+                if (ipAddress == null || ipAddress.isEmpty() || "unknown".equalsIgnoreCase(ipAddress)) {
+                    ipAddress = request.getRemoteAddr();
+                }
+
+                // 如果是多级代理，获取第一个IP地址
+                if (ipAddress != null && ipAddress.contains(",")) {
+                    ipAddress = ipAddress.split(",")[0].trim();
+                }
+                System.out.println(ipAddress);
+
+                // 获取设备类型
+                String userAgent = request.getHeader("User-Agent");
+                // 判断设备类型
+                if (userAgent != null && !userAgent.isEmpty()) {
+                    if (userAgent.toLowerCase().contains("mobile") || userAgent.toLowerCase().contains("android") || userAgent.toLowerCase().contains("iphone") || userAgent.toLowerCase().contains("ipad")) {
+                        // 移动设备
+                        device = "mobile";
+                    }
+                }
 
 
 //            EPayVo ePayVo = orderService.constructOrderPayDataEPay(orderPayVo, "192.168.201.59", device);
-            EPayVo ePayVo = orderService.constructOrderPayDataEPay(orderPayVo, ipAddress, device);
+                EPayVo ePayVo = orderService.constructOrderPayDataEPay(orderPayVo, ipAddress, device);
 
-            HttpResponse httpResponse = HttpClientUtils.doPost(Constant.EASY_PAY_HOST, Constant.EASY_PAY_INTERFACE, new HashMap<>(), new HashMap<>(), ePayVo.constructPathQueryParameter());
+                HttpResponse httpResponse = HttpClientUtils.doPost(Constant.EASY_PAY_HOST, Constant.EASY_PAY_INTERFACE, new HashMap<>(), new HashMap<>(), ePayVo.constructPathQueryParameter());
 
-            if (httpResponse.getStatusLine().getStatusCode() == 200) {
-                HttpEntity entity = httpResponse.getEntity();
-                String respString = EntityUtils.toString(entity);
-                HashMap<String, String> responseMap = JSON.parseObject(respString, new TypeReference<HashMap<String, String>>(){});
-                if (responseMap.get("code").equals("1")){
-                    // 返回支付页面
-                    return responseMap.get("payurl");
+                if (httpResponse.getStatusLine().getStatusCode() == 200) {
+                    HttpEntity entity = httpResponse.getEntity();
+                    String respString = EntityUtils.toString(entity);
+                    HashMap<String, String> responseMap = JSON.parseObject(respString, new TypeReference<HashMap<String, String>>(){});
+                    if (responseMap.get("code").equals("1")){
+                        // 返回支付页面
+                        return responseMap.get("payurl");
+
+                    }
 
                 }
-
             }
 
             return Constant.ORDER_CREATE_FAIL_RETURN_URL;

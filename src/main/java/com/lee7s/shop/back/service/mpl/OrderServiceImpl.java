@@ -425,4 +425,37 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
 
     }
 
+    /**
+     * 免费订单 赠品订单
+     * @param orderPayVo
+     */
+    @Override
+    @Transactional(readOnly = false, rollbackFor = Exception.class)
+    public void constructFreeOrder(OrderPayVo orderPayVo) {
+
+        String orderSn = IdWorker.get32UUID();
+
+        // 填充订单信息
+        Order order = new Order();
+        order.setOrderSn(orderSn);
+        order.setOrderStatus(Constant.OrderStatus.FINISH.getStatusCode());
+        order.setOrderTotalPrice(orderPayVo.getOrderTotalPrice());
+        order.setGoodsPrice(orderPayVo.getGoodsPrice());
+        order.setEmail(orderPayVo.getEmail());
+        order.setGoodsNum(orderPayVo.getGoodsNum());
+        order.setProductName(orderPayVo.getProductName());
+        order.setProductId(orderPayVo.getProductId());
+
+        // 保存订单
+        this.baseMapper.insert(order);
+
+        Product product = productService.requestProductById(orderPayVo.getProductId());
+
+        String productDetail = product.getProductDetail();
+        String email = order.getEmail();
+        emailCodeClient.sendEmailOrder(email, order, productDetail, 1);
+
+
+    }
+
 }

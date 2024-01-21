@@ -32,4 +32,6 @@ public interface OrderService extends IService<Order> {
     Integer statisticsOrderByStatus(Integer statusCode);
 
     EPayVo constructOrderPayDataEPay(OrderPayVo orderPayVo, String ipAddress, String device);
+
+    void constructFreeOrder(OrderPayVo orderPayVo);
 }
