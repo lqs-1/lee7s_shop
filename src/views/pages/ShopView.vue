@@ -229,7 +229,23 @@ export default {
       goodsVisible: false,
       rules: {
         num: [{required: true, message: '数量必须填写', trigger: "blur"}],
-        email: [{required: true, message: '邮箱必须填写', trigger: "blur"}],
+        email: [
+            {
+              required: true,
+              message: '邮箱必须填写',
+              trigger: "blur"
+            },
+          {
+            validator:function (rule, value, callback) {
+              if (/^[\w.]{1,64}@[a-z0-9]{1,256}(\.[a-z]{2,6}){1,2}$/i.test(value) == false){
+                callback(new Error("邮箱格式错误"))
+              }else {
+                callback()
+              }
+            },
+            trigger: "blur"
+          }
+        ],
         payMethod: [{required: true, message: '支付方式必须填写', trigger: "blur"}],
         goodsNum: [{required: true, message: '产品数量必须填写', trigger: "blur"}],
       },
