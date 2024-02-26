@@ -21,7 +21,6 @@
                                                         target="_blank">邮箱</a>联系客服
           </li>
           <li style="color: red">小店没退款功能 商品出问题可联系客服退换</li>
-          <li style="color: 	#8B2500">邮箱填写一定要正确 邮箱用于接受卡密</li>
         </ul>
       </center>
 
