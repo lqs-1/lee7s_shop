@@ -85,7 +85,7 @@ export default {
 
     created() {
       console.log(this.order)
-        window.document.title = "订单查询"
+        window.document.title = "闲人小店.XianRen"
         let flag = navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i)
         if (flag) {
           //如果flag不为空，说明可以匹配到，是手机端

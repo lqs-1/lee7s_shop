@@ -266,7 +266,7 @@ export default {
   },
 
   created() {
-    window.document.title = "商品页"
+    window.document.title = "闲人小店.XianRen"
     let flag = navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i)
     if (flag) {
       //如果flag不为空，说明可以匹配到，是手机端

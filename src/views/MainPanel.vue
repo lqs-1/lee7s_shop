@@ -17,9 +17,10 @@
         </el-menu>
       </el-header>
       <el-main
-          style="width: 95%; height: 87vh;margin: 0 auto; margin-top: 15px;margin-bottom:15px;background-color: #fff;border-radius:10px ;">
+          style="width: 95%; height: 85vh;margin: 0 auto; margin-top: 15px;margin-bottom:15px;background-color: #fff;border-radius:10px ;">
         <router-view/>
       </el-main>
+      <center>© 闲人小店.XianRen</center>
     </el-container>
   </div>
 </template>
